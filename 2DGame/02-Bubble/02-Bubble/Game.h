@@ -5,8 +5,8 @@
 #include "Scene.h"
 
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 580
+#define SCREEN_HEIGHT 580
 
 
 // Game is a singleton (a class with a single instance) that represents our whole application
@@ -15,10 +15,10 @@
 class Game
 {
 
-private:
+public:
 	Game() {}
 	
-public:
+	
 	static Game &instance()
 	{
 		static Game G;
