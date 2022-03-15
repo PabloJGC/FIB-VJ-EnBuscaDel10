@@ -23,12 +23,14 @@ public:
 	
 private:
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, size;
+	glm::ivec2 tileMapDispl, spriteSize, hitboxSize, hitboxOffset;
+	glm::fvec2 posPlayer, velocity;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
 
+	inline void updatePosition(int deltaTime);
 };
 
 
