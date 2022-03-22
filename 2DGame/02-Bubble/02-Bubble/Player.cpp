@@ -10,7 +10,7 @@
 //#define JUMP_HEIGHT 64
 #define RUN_MAX_SPEED 0.25f
 #define FALL_SPEED 0.3f
-#define JUMP_MAX_SPEED 0.5f
+#define JUMP_MAX_SPEED 5.f
 #define PIXEL_SIZE 4
 
 
@@ -58,7 +58,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	
 }
 
-void Player::update(int deltaTime)
+bool Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
@@ -107,6 +107,7 @@ void Player::update(int deltaTime)
 	}
 	
 	updatePosition(deltaTime);
+	return posPlayer.y < 0;
 }
 
 void Player::render()

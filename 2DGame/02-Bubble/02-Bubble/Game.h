@@ -43,6 +43,7 @@ public:
 	bool getSpecialKey(int key) const;
 
 private:
+	int currentLevel;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 

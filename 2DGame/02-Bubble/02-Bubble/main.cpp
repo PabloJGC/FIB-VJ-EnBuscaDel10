@@ -72,9 +72,9 @@ static void idleCallback()
 	if(deltaTime > TIME_PER_FRAME)
 	{
 		// Every time we enter here is equivalent to a game loop execution
-		if(!Game::instance().update(deltaTime))
+		if(!Game::instance().update(TIME_PER_FRAME))
 			exit(0);
-		prevTime = currentTime;
+		prevTime += TIME_PER_FRAME;
 		glutPostRedisplay();
 	}
 }

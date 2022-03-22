@@ -19,11 +19,12 @@ public:
 	Scene();
 	~Scene();
 
-	void init();
-	void update(int deltaTime);
+	void init(int level);
+	int update(int deltaTime);
 	void render();
 
 private:
+	int level;
 	void initShaders();
 
 private:

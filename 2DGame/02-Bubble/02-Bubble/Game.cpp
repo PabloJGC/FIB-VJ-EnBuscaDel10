@@ -5,14 +5,19 @@
 
 void Game::init()
 {
+	currentLevel = 1;
 	bPlay = true;
 	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
-	scene.init();
+	scene.init(1);
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
+	int level = scene.update(deltaTime);
+	if (level != currentLevel) {
+		currentLevel = level;
+		scene.init(currentLevel);
+	}
 	
 	return bPlay;
 }

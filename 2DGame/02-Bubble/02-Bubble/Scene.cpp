@@ -27,22 +27,72 @@ Scene::~Scene()
 }
 
 
-void Scene::init()
+void Scene::init(int level)
 {
+	this->level = level;
 	initShaders();
-	map = TileMap::createTileMap("levels/level08.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	string file;
+	switch (level) {
+		case 1: {
+			file = "levels/level01.txt";
+			break;
+		}
+		case 2: {
+			file = "levels/level02.txt";
+			break;
+		}
+		case 3: {
+			file = "levels/level03.txt";
+			break;
+		}
+		case 4: {
+			file = "levels/level04.txt";
+			break;
+		}
+		case 5: {
+			file = "levels/level05.txt";
+			break;
+		}
+		case 6: {
+			file = "levels/level06.txt";
+			break;
+		case 7: {
+			file = "levels/level07.txt";
+			break;
+		}
+		case 8: {
+			file = "levels/level08.txt";
+			break;
+		}
+		case 9: {
+			file = "levels/level09.txt";
+			break;
+		}
+		case 10: {
+			file = "levels/level10.txt";
+			break;
+		}
+		case 11: {
+			file = "levels/memorial.txt";
+			break;
+		}
+		}
+	}
+	map = TileMap::createTileMap(file, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	glm::ivec2 playerInitPos = map->getPlayerInitPos();
+	player->setPosition(playerInitPos);
 	player->setTileMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
 
-void Scene::update(int deltaTime)
+int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	player->update(deltaTime);
+	bool nextLevel = player->update(deltaTime);
+	return level + int(nextLevel);
 }
 
 void Scene::render()
