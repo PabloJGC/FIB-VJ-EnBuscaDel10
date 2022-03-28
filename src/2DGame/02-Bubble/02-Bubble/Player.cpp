@@ -6,11 +6,10 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 4
-//#define JUMP_HEIGHT 64
+#define JUMP_ANGLE_STEP 6
 #define RUN_MAX_SPEED 0.25f
-#define FALL_SPEED 0.3f
-#define JUMP_MAX_SPEED 0.4f
+#define FALL_SPEED 0.25f
+#define JUMP_MAX_SPEED 0.6f
 #define DASH_TIME 200
 #define DASH_MAX_SPEED 0.75f
 #define DASH_MIN_SPEED 0.5f
@@ -79,7 +78,7 @@ bool Player::update(int deltaTime)
 		}
 		case JUMPING: {
 			move();
-			velocity.y = -JUMP_MAX_SPEED*cos(3.14159f*jumpAngle/180.f);
+			velocity.y = min(FALL_SPEED, -JUMP_MAX_SPEED*cos(3.14159f*jumpAngle/180.f));
 			break;
 		}
 		case DASHING: {
@@ -113,8 +112,7 @@ void Player::updateState(int deltaTime) {
 				dash();
 			}
 			else if (jumpAngle >= 180 ||
-				(jumpAngle > 90 && grounded) ||
-				map->collisionMoveUp(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, -1), hitboxSize))
+				(jumpAngle > 90 && grounded))
 				state = NORMAL;
 			break;
 		}
