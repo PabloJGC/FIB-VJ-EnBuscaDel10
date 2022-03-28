@@ -6,12 +6,14 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 6
+#define JUMP_ANGLE_STEP 4
 //#define JUMP_HEIGHT 64
 #define RUN_MAX_SPEED 0.25f
 #define FALL_SPEED 0.3f
-#define JUMP_MAX_SPEED 0.5f
-#define DASH_TIME 
+#define JUMP_MAX_SPEED 0.4f
+#define DASH_TIME 200
+#define DASH_MAX_SPEED 0.75f
+#define DASH_MIN_SPEED 0.5f
 #define PIXEL_SIZE 4
 
 
@@ -30,6 +32,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	hitboxSize = glm::vec2(24, 32);
 
 	canDash = true;
+	dashDirection = glm::ivec2(0);
 	spritesheet.loadFromFile("images/textures.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(8./128., 8./256), &spritesheet, &shaderProgram);
 
@@ -55,7 +58,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5625f, 16.f/32.f));
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.4375f, 0.53125f));
 		
-	sprite->changeAnimation(0);
+	sprite->changeAnimation(STAND_RIGHT);
+	facingDirection = RIGHT;
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	
@@ -65,7 +69,7 @@ bool Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 
-	updateState();
+	updateState(deltaTime);
 	
 	switch (state) {
 		case NORMAL: {
@@ -79,6 +83,7 @@ bool Player::update(int deltaTime)
 			break;
 		}
 		case DASHING: {
+			velocity = dashDirection*(DASH_MIN_SPEED + (DASH_MAX_SPEED - DASH_MIN_SPEED)*(dashTimer/DASH_TIME));
 			break;
 		}
 	}
@@ -87,7 +92,7 @@ bool Player::update(int deltaTime)
 	return posPlayer.y < 0;
 }
 
-void Player::updateState() {
+void Player::updateState(int deltaTime) {
 	grounded = map->collisionMoveDown(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize);
 	if (grounded && state != DASHING)
 		canDash = true;
@@ -96,23 +101,59 @@ void Player::updateState() {
 			if (grounded && Game::instance().getJumpKeyPressed()) {
 				state = JUMPING;
 				jumpAngle = 0;
-				startY = posPlayer.y;
 			}
-			//else if (canDash && Game::instance().getDashKeyPressed()) {
-
-			//}
+			else if (canDash && Game::instance().getDashKeyPressed()) {
+				dash();
+			}
 			break;
 		}
 		case JUMPING: {
 			jumpAngle += JUMP_ANGLE_STEP;
-			if (jumpAngle >= 180 ||
+			if (canDash && Game::instance().getDashKeyPressed()) {
+				dash();
+			}
+			else if (jumpAngle >= 180 ||
 				(jumpAngle > 90 && grounded) ||
 				map->collisionMoveUp(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, -1), hitboxSize))
 				state = NORMAL;
 			break;
 		}
+		case DASHING: {
+			dashTimer -= deltaTime;
+			if (dashTimer <= 0) {
+				if (dashDirection.y < 0)
+					state = NORMAL;
+				else if (dashDirection.y == 0) {
+					state = JUMPING;
+					jumpAngle = 90;
+				}
+				else {
+					state = JUMPING;
+					jumpAngle = 60;
+				}
+			}
+			break;
+		}
 	}
 
+}
+
+void Player::dash() {
+	dashDirection.y = Game::instance().getSpecialKey(GLUT_KEY_UP) ? -1
+						: Game::instance().getSpecialKey(GLUT_KEY_DOWN) ? 1
+						: 0;
+	if (dashDirection.y != 0)
+		dashDirection.x = Game::instance().getSpecialKey(GLUT_KEY_LEFT) ? -1
+						: Game::instance().getSpecialKey(GLUT_KEY_RIGHT) ? 1
+						: 0;
+	else
+		dashDirection.x = facingDirection == LEFT ? -1 : 1;
+
+	dashDirection = glm::normalize(dashDirection);
+
+	dashTimer = DASH_TIME;
+	canDash = false;
+	state = DASHING;
 }
 
 void Player::move() {
@@ -148,6 +189,7 @@ inline void Player::updatePosition(int deltaTime) {
 	glm::vec2 deltaVelocityY = glm::vec2(0.f, velocity.y*deltaTime);
 
 	if (velocity.x < 0) {
+		facingDirection = LEFT;
 		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
 		if (map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize)) {
@@ -157,6 +199,7 @@ inline void Player::updatePosition(int deltaTime) {
 		}
 	}
 	else if (velocity.x > 0) {
+		facingDirection = RIGHT;
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
 		if (map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize))

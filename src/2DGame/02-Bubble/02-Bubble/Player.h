@@ -28,16 +28,21 @@ private:
 		CLIMBING,
 		JUMPING
 	} state;
+	enum FacingDirection {
+		RIGHT,
+		LEFT
+	} facingDirection;
 	bool canDash, grounded;
 	glm::ivec2 tileMapDispl, spriteSize, hitboxSize, hitboxOffset;
 	glm::fvec2 posPlayer, velocity, dashDirection;
-	float dashTimer;
+	int dashTimer;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
 
-	void updateState();
+	void updateState(int deltaTime);
+	void dash();
 	void move();
 	inline void updatePosition(int deltaTime);
 };
