@@ -14,32 +14,33 @@ class Player
 {
 
 public:
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram);
 	bool update(int deltaTime);
 	void render();
-	
-	void setTileMap(TileMap *tileMap);
-	void setPosition(const glm::vec2 &pos);
-	
+
+	void setTileMap(TileMap* tileMap);
+	void setPosition(const glm::vec2& pos);
+
 private:
 	enum State {
 		NORMAL,
 		DASHING,
 		CLIMBING,
-		JUMPING
+		JUMPING,
+		WALL_JUMPING
 	} state;
 	enum FacingDirection {
 		RIGHT,
 		LEFT
 	} facingDirection;
-	bool canDash, grounded;
+	bool canDash, canClimb, grounded;
 	glm::ivec2 tileMapDispl, spriteSize, hitboxSize, hitboxOffset;
 	glm::fvec2 posPlayer, velocity, dashDirection;
 	int dashTimer;
 	int jumpAngle, startY;
 	Texture spritesheet;
-	Sprite *sprite;
-	TileMap *map;
+	Sprite* sprite;
+	TileMap* map;
 
 	void updateState(int deltaTime);
 	void dash();
@@ -49,5 +50,3 @@ private:
 
 
 #endif // _PLAYER_INCLUDE
-
-
