@@ -34,6 +34,7 @@ private:
 		LEFT
 	} facingDirection;
 	bool canDash, canClimb, grounded;
+	bool dead;
 	glm::ivec2 tileMapDispl, spriteSize, hitboxSize, hitboxOffset;
 	glm::fvec2 posPlayer, velocity, dashDirection;
 	int dashTimer;
