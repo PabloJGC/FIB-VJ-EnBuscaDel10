@@ -38,14 +38,14 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	sprite->setNumberAnimations(4);
 
-	// TODO: aÃ±adir opciÃ³n de invertir los keyframes horizontalmente.
+	// TODO: añadir opción de invertir los keyframes horizontalmente.
 	sprite->setAnimationSpeed(STAND_LEFT, 10);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.4375f, 16.f / 32.f));
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 10);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.4375f, 16.f / 32.f));
 
-	// TODO: aÃ±adir opciÃ³n de invertir los keyframes horizontalmente.
+	// TODO: añadir opción de invertir los keyframes horizontalmente.
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 16.f / 32.f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(8.f / 16.f, 16.f / 32.f));
@@ -100,9 +100,8 @@ void Player::updateState(int deltaTime) {
 	grounded = map->collisionMoveDown(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize);
 	if (grounded && state != DASHING)
 		canDash = true;
-	if (!grounded && velocity.y > 0) {
-		canClimb = true;
-	}
+	canClimb = !grounded && velocity.y > 0;
+
 	switch (state) {
 	case NORMAL: {
 		if (grounded && Game::instance().getJumpKeyPressed()) {
@@ -111,6 +110,10 @@ void Player::updateState(int deltaTime) {
 		}
 		else if (canDash && Game::instance().getDashKeyPressed()) {
 			dash();
+		}
+		else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
+			(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
+			state = CLIMBING;
 		}
 		break;
 	}
@@ -122,8 +125,8 @@ void Player::updateState(int deltaTime) {
 		else if (jumpAngle >= 180 ||
 			(jumpAngle > 90 && grounded))
 			state = NORMAL;
-		else if (canClimb && (map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(velocity.x * deltaTime, 0.f)) + hitboxOffset, hitboxSize) ||
-			                  map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(velocity.x * deltaTime, 0.f)) + hitboxOffset, hitboxSize))) {
+		else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
+			(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
 			state = CLIMBING;
 		}
 		break;
@@ -131,7 +134,7 @@ void Player::updateState(int deltaTime) {
 	case DASHING: {
 		dashTimer -= deltaTime;
 		if (dashTimer <= 0) {
-			if (dashDirection.y < 0)
+			if (dashDirection.y > 0)
 				state = NORMAL;
 			else if (dashDirection.y == 0) {
 				state = JUMPING;
@@ -142,17 +145,14 @@ void Player::updateState(int deltaTime) {
 				jumpAngle = 60;
 			}
 		}
-		else if (canClimb && (map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(velocity.x * deltaTime, 0.f)) + hitboxOffset, hitboxSize) ||
-			                  map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(velocity.x * deltaTime, 0.f)) + hitboxOffset, hitboxSize))) {
-			state = CLIMBING;
-		}
 		break;
 	}
 	case CLIMBING: {
 		if (canDash && Game::instance().getDashKeyPressed()) {
 			dash();
 		}
-		else if (grounded) {
+		else if (grounded || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
+			(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
 			state = NORMAL;
 		}
 

@@ -26,7 +26,8 @@ private:
 		NORMAL,
 		DASHING,
 		CLIMBING,
-		JUMPING
+		JUMPING,
+		WALL_JUMPING
 	} state;
 	enum FacingDirection {
 		RIGHT,
