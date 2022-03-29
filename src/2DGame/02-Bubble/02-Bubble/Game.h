@@ -5,8 +5,8 @@
 #include "Scene.h"
 
 
-#define SCREEN_WIDTH 580
-#define SCREEN_HEIGHT 580
+#define SCREEN_WIDTH 512
+#define SCREEN_HEIGHT 512
 
 #define DASH_KEY_UC 88
 #define DASH_KEY_LC 120
