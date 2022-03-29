@@ -13,6 +13,9 @@
 #define DASH_TIME 200
 #define DASH_MAX_SPEED 0.75f
 #define DASH_MIN_SPEED 0.5f
+#define WALL_JUMP_TIME 190
+#define WALL_JUMP_MAX_SPEED 0.7f
+#define WALL_JUMP_MIN_SPEED 0.5f
 #define PIXEL_SIZE 4
 
 
@@ -90,6 +93,10 @@ bool Player::update(int deltaTime)
 		velocity.y = 0.1f;
 		break;
 	}
+	case WALL_JUMPING: {
+		velocity = dashDirection * (WALL_JUMP_MIN_SPEED + (WALL_JUMP_MAX_SPEED - WALL_JUMP_MIN_SPEED) * (dashTimer / WALL_JUMP_TIME));
+		break;
+	}
 	}
 
 	updatePosition(deltaTime);
@@ -104,30 +111,50 @@ void Player::updateState(int deltaTime) {
 
 	switch (state) {
 	case NORMAL: {
-		if (grounded && Game::instance().getJumpKeyPressed()) {
-			state = JUMPING;
-			jumpAngle = 0;
+		if (Game::instance().getJumpKeyPressed()) {
+			if (grounded) {
+				state = JUMPING;
+				jumpAngle = 0;
+			}
+			else if (wallAt(RIGHT)) {
+				wallJump(RIGHT);
+			}
+			else if (wallAt(LEFT)) {
+				wallJump(LEFT);
+			}
 		}
-		else if (canDash && Game::instance().getDashKeyPressed()) {
-			dash();
-		}
-		else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
-			(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
-			state = CLIMBING;
+		if (state == NORMAL) {
+			if (canDash && Game::instance().getDashKeyPressed()) {
+				dash();
+			}
+			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
+				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
+				state = CLIMBING;
+			}
 		}
 		break;
 	}
 	case JUMPING: {
 		jumpAngle += JUMP_ANGLE_STEP;
-		if (canDash && Game::instance().getDashKeyPressed()) {
-			dash();
+		if (Game::instance().getJumpKeyPressed()) {
+			if (wallAt(RIGHT)) {
+				wallJump(RIGHT);
+			}
+			else if (wallAt(LEFT)) {
+				wallJump(LEFT);
+			}
 		}
-		else if (jumpAngle >= 180 ||
-			(jumpAngle > 90 && grounded))
-			state = NORMAL;
-		else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
-			(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
-			state = CLIMBING;
+		if (state == JUMPING) {
+			if (canDash && Game::instance().getDashKeyPressed()) {
+				dash();
+			}
+			else if (jumpAngle >= 180 ||
+				(jumpAngle > 90 && grounded))
+				state = NORMAL;
+			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT)) ||
+				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && wallAt(LEFT)))) {
+				state = CLIMBING;
+			}
 		}
 		break;
 	}
@@ -148,17 +175,55 @@ void Player::updateState(int deltaTime) {
 		break;
 	}
 	case CLIMBING: {
+		if (Game::instance().getJumpKeyPressed()) {
+			if (wallAt(RIGHT)) {
+				wallJump(RIGHT);
+			}
+			else if (wallAt(LEFT)) {
+				wallJump(LEFT);
+			}
+		}
+		if (state == CLIMBING) {
+			if (canDash && Game::instance().getDashKeyPressed()) {
+				dash();
+			}
+			else if (grounded || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
+				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
+				state = NORMAL;
+			}
+		}
+		break;
+	}
+	case WALL_JUMPING: {
 		if (canDash && Game::instance().getDashKeyPressed()) {
 			dash();
 		}
-		else if (grounded || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
-			(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
-			state = NORMAL;
+		else {
+			dashTimer -= deltaTime;
+			if (dashTimer <= 0) {
+				state = JUMPING;
+				jumpAngle = 60;
+			}
 		}
-
+		break;
 	}
 	}
+}
 
+bool Player::wallAt(FacingDirection direction) const {
+	if (direction == RIGHT)
+		return map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize);
+	return map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize);
+}
+
+void Player::wallJump(FacingDirection facingDirection) {
+	dashDirection.y = -1;
+	dashDirection.x = facingDirection == LEFT ? 1 : -1;
+
+	dashDirection = glm::normalize(dashDirection);
+
+	dashTimer = WALL_JUMP_TIME;
+	state = WALL_JUMPING;
 }
 
 void Player::dash() {
@@ -170,7 +235,7 @@ void Player::dash() {
 		: Game::instance().getSpecialKey(GLUT_KEY_RIGHT) ? 1
 		: 0;
 	else
-		dashDirection.x = facingDirection == LEFT ? -1 : 1;
+		dashDirection.x = facingDirection == LEFT ? 1 : -1;
 
 	dashDirection = glm::normalize(dashDirection);
 
