@@ -35,20 +35,21 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	canDash = true;
 	canClimb = false;
+	dead = false;
 	dashDirection = glm::ivec2(0);
 	spritesheet.loadFromFile("images/textures.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(8. / 128., 8. / 256), &spritesheet, &shaderProgram);
 
 	sprite->setNumberAnimations(4);
 
-	// TODO: añadir opción de invertir los keyframes horizontalmente.
+	// TODO: aÃ±adir opciÃ³n de invertir los keyframes horizontalmente.
 	sprite->setAnimationSpeed(STAND_LEFT, 10);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.4375f, 16.f / 32.f));
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 10);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.4375f, 16.f / 32.f));
 
-	// TODO: añadir opción de invertir los keyframes horizontalmente.
+	// TODO: aÃ±adir opciÃ³n de invertir los keyframes horizontalmente.
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 16.f / 32.f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(8.f / 16.f, 16.f / 32.f));
@@ -100,6 +101,13 @@ bool Player::update(int deltaTime)
 	}
 
 	updatePosition(deltaTime);
+	dead = posPlayer.y > (map->getMapSize().y * map->getTileSize());
+	if (dead) {
+		posPlayer = map->getPlayerInitPos();
+		canDash = true;
+		canClimb = false;
+		dead = false;
+	}
 	return posPlayer.y < 0;
 }
 
