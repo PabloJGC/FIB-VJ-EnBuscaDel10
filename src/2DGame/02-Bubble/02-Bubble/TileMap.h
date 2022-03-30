@@ -47,6 +47,8 @@ private:
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
 
 private:
+	inline bool tilesOutOfBounds(glm::ivec2 coords) const;
+
 	GLuint vao0, vao1;
 	GLuint vbo0, vbo1;
 	GLint posLocation, texCoordLocation;

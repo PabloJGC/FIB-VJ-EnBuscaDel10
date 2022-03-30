@@ -5,15 +5,19 @@
 
 void Game::init()
 {
-	currentLevel = 1;
+	currentLevel = 7;
 	bPlay = true;
 	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
-	scene.init(1);
+	scene.init(currentLevel);
 }
 
 bool Game::update(int deltaTime)
 {
 	int level = scene.update(deltaTime);
+	for (int i = 0; i < 256; ++i) {
+		if (keyStatus[i] == PRESSED)
+			keyStatus[i] = DOWN;
+	}
 	if (level != currentLevel) {
 		currentLevel = level;
 		scene.init(currentLevel);
@@ -33,11 +37,14 @@ void Game::keyPressed(int key)
 	if(key == 27) // Escape code
 		bPlay = false;
 	keys[key] = true;
+	if (keyStatus[key] == UP)
+		keyStatus[key] = PRESSED;
 }
 
 void Game::keyReleased(int key)
 {
 	keys[key] = false;
+	keyStatus[key] = UP;
 }
 
 void Game::specialKeyPressed(int key)
@@ -68,11 +75,11 @@ bool Game::getKey(int key) const
 }
 
 bool Game::getJumpKeyPressed() {
-	return getKey(JUMP_KEY_UC) || getKey(JUMP_KEY_LC);
+	return keyStatus[JUMP_KEY_UC] == PRESSED || keyStatus[JUMP_KEY_LC] == PRESSED;
 }
 
 bool Game::getDashKeyPressed() {
-	return getKey(DASH_KEY_UC) || getKey(DASH_KEY_LC);
+	return keyStatus[DASH_KEY_UC] == PRESSED || keyStatus[DASH_KEY_LC] == PRESSED;
 }
 
 bool Game::getSpecialKey(int key) const

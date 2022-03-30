@@ -181,6 +181,10 @@ void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
 
+inline bool TileMap::tilesOutOfBounds(glm::ivec2 coords) const {
+	return coords.x < 0 || coords.y < 0 || coords.x >= mapSize.x || coords.y >= mapSize.y;
+}
+
 bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const
 {
 	int x, y0, y1;
@@ -190,7 +194,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(mapLayer0[y*mapSize.x+x] != 0)
+		if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y*mapSize.x+x] != 0)
 			return true;
 	}
 	
@@ -204,9 +208,9 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	x = (pos.x + size.x - 1) / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
-	for(int y=y0; y<=y1; y++)
+	for (int y=y0; y<=y1; y++)
 	{
-		if(mapLayer0[y*mapSize.x+x] != 0)
+		if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y*mapSize.x+x] != 0)
 			return true;
 	}
 	
@@ -220,9 +224,9 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
-	for(int x=x0; x<=x1; x++)
+	for (int x=x0; x<=x1; x++)
 	{
-		if (y < mapSize.y && mapLayer0[y*mapSize.x+x] != 0)
+		if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y*mapSize.x+x] != 0)
 		{
 			//if(*posY - tileSize * y + size.y <= 4)
 			//{
@@ -244,7 +248,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) con
 	y = pos.y / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
-		if (mapLayer0[y * mapSize.x + x] != 0)
+		if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x] != 0)
 		{
 			//if(*posY - tileSize * y + size.y <= 4)
 			//{

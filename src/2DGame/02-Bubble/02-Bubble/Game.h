@@ -50,11 +50,17 @@ public:
 	bool getSpecialKey(int key) const;
 
 private:
+	enum KeyStatus{
+		UP,
+		PRESSED,
+		DOWN
+	};
 	int currentLevel;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
+	KeyStatus keyStatus[256];		  // Used to know when they've been pressed.
 
 };
 
