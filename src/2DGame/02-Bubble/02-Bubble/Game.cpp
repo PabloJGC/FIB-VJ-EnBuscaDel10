@@ -5,7 +5,7 @@
 
 void Game::init()
 {
-	currentLevel = 7;
+	currentLevel = 1;
 	bPlay = true;
 	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
 	scene.init(currentLevel);

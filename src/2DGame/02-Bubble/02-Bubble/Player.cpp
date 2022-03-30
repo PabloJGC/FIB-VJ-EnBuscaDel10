@@ -44,19 +44,17 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	sprite->setNumberAnimations(4);
 
-	// TODO: añadir opción de invertir los keyframes horizontalmente.
 	sprite->setAnimationSpeed(STAND_LEFT, 10);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.4375f, 16.f / 32.f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.4375f, 19.f / 32.f));
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 10);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.4375f, 16.f / 32.f));
 
-	// TODO: añadir opción de invertir los keyframes horizontalmente.
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 16.f / 32.f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(8.f / 16.f, 16.f / 32.f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5625f, 16.f / 32.f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 0.53125f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 19.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(8.f / 16.f, 19.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5625f, 19.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 20.f / 32.f));
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.4375f, 16.f / 32.f));
