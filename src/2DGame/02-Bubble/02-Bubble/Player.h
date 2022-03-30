@@ -44,7 +44,7 @@ private:
 	TileMap* map;
 
 	void updateState(int deltaTime);
-	bool wallAt(FacingDirection facingDirection) const;
+	bool wallAt(FacingDirection facingDirection, int offset) const;
 	void wallJump(FacingDirection facingDirection);
 	void dash();
 	void move();

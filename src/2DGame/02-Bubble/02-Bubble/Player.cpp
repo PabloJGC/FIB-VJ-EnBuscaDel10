@@ -9,6 +9,7 @@
 #define JUMP_ANGLE_STEP 6
 #define RUN_MAX_SPEED 0.25f
 #define FALL_SPEED 0.25f
+#define CLIMB_FALL_SPEED 0.05f
 #define JUMP_MAX_SPEED 0.6f
 #define DASH_TIME 200
 #define DASH_MAX_SPEED 0.75f
@@ -16,6 +17,7 @@
 #define WALL_JUMP_TIME 190
 #define WALL_JUMP_MAX_SPEED 0.7f
 #define WALL_JUMP_MIN_SPEED 0.5f
+#define WALL_JUMP_DISTANCE 3
 #define PIXEL_SIZE 4
 
 
@@ -91,7 +93,8 @@ bool Player::update(int deltaTime)
 		break;
 	}
 	case CLIMBING: {
-		velocity.y = 0.1f;
+		move();
+		velocity.y = CLIMB_FALL_SPEED;
 		break;
 	}
 	case WALL_JUMPING: {
@@ -107,6 +110,9 @@ bool Player::update(int deltaTime)
 		canDash = true;
 		canClimb = false;
 		dead = false;
+		state = NORMAL;
+		facingDirection = RIGHT;
+		sprite->changeAnimation(STAND_RIGHT);
 	}
 	return posPlayer.y < 0;
 }
@@ -124,10 +130,10 @@ void Player::updateState(int deltaTime) {
 				state = JUMPING;
 				jumpAngle = 0;
 			}
-			else if (wallAt(RIGHT)) {
+			else if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
 			}
-			else if (wallAt(LEFT)) {
+			else if (wallAt(LEFT, WALL_JUMP_DISTANCE)) {
 				wallJump(LEFT);
 			}
 		}
@@ -145,10 +151,10 @@ void Player::updateState(int deltaTime) {
 	case JUMPING: {
 		jumpAngle += JUMP_ANGLE_STEP;
 		if (Game::instance().getJumpKeyPressed()) {
-			if (wallAt(RIGHT)) {
+			if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
 			}
-			else if (wallAt(LEFT)) {
+			else if (wallAt(LEFT, WALL_JUMP_DISTANCE)) {
 				wallJump(LEFT);
 			}
 		}
@@ -159,8 +165,8 @@ void Player::updateState(int deltaTime) {
 			else if (jumpAngle >= 180 ||
 				(jumpAngle > 90 && grounded))
 				state = NORMAL;
-			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT)) ||
-				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && wallAt(LEFT)))) {
+			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT, 1)) ||
+				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && wallAt(LEFT, 1)))) {
 				state = CLIMBING;
 			}
 		}
@@ -184,10 +190,10 @@ void Player::updateState(int deltaTime) {
 	}
 	case CLIMBING: {
 		if (Game::instance().getJumpKeyPressed()) {
-			if (wallAt(RIGHT)) {
+			if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
 			}
-			else if (wallAt(LEFT)) {
+			else if (wallAt(LEFT, WALL_JUMP_DISTANCE)) {
 				wallJump(LEFT);
 			}
 		}
@@ -195,8 +201,8 @@ void Player::updateState(int deltaTime) {
 			if (canDash && Game::instance().getDashKeyPressed()) {
 				dash();
 			}
-			else if (grounded || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
-				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
+			else if (grounded || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT, 1)) ||
+				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && wallAt(LEFT, 1)))) {
 				state = NORMAL;
 			}
 		}
@@ -218,10 +224,10 @@ void Player::updateState(int deltaTime) {
 	}
 }
 
-bool Player::wallAt(FacingDirection direction) const {
+bool Player::wallAt(FacingDirection direction, int offset) const {
 	if (direction == RIGHT)
-		return map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize);
-	return map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize);
+		return map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(offset, 0)) + hitboxOffset, hitboxSize);
+	return map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-offset, 0)) + hitboxOffset, hitboxSize);
 }
 
 void Player::wallJump(FacingDirection facingDirection) {
@@ -243,7 +249,7 @@ void Player::dash() {
 		: Game::instance().getSpecialKey(GLUT_KEY_RIGHT) ? 1
 		: 0;
 	else
-		dashDirection.x = facingDirection == LEFT ? 1 : -1;
+		dashDirection.x = facingDirection == LEFT ? -1 : 1;
 
 	dashDirection = glm::normalize(dashDirection);
 
@@ -288,7 +294,7 @@ inline void Player::updatePosition(int deltaTime) {
 		facingDirection = LEFT;
 		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
-		if (map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize)) {
+		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize)) {
 			deltaVelocity.x = 0;
 			posPlayer.x = map->getTileSize() * int((posPlayer.x + spriteSize.x) / map->getTileSize()) - hitboxOffset.x;
 			sprite->changeAnimation(STAND_LEFT);
@@ -298,7 +304,8 @@ inline void Player::updatePosition(int deltaTime) {
 		facingDirection = RIGHT;
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
-		if (map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize))
+		int mapSize = map->getMapSize().x*map->getTileSize();
+		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize))
 		{
 			deltaVelocity.x = 0;
 			posPlayer.x = map->getTileSize() * int(posPlayer.x / map->getTileSize()) + hitboxOffset.x;

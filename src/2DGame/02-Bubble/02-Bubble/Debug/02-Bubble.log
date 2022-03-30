@@ -1,1 +1,54 @@
-﻿
+﻿  Player.cpp
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(235,36): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(244,50): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(248,51): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(252,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(299,94): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(311,77): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(325,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(332,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+  02-Bubble.vcxproj -> C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\02-Bubble.exe
