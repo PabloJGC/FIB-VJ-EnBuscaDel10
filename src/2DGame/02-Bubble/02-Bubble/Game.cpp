@@ -5,9 +5,9 @@
 
 void Game::init()
 {
+	setBackgroundColor(0.5f, 0.5f, 0.7f);
 	currentLevel = 1;
 	bPlay = true;
-	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
 	scene.init(currentLevel);
 }
 
@@ -30,6 +30,10 @@ void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scene.render();
+}
+
+void Game::setBackgroundColor(float red, float green, float blue) {
+	glClearColor(red, green, blue, 1.0f);
 }
 
 void Game::keyPressed(int key)

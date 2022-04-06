@@ -34,6 +34,7 @@ public:
 	void init();
 	bool update(int deltaTime);
 	void render();
+	void setBackgroundColor(float red, float green, float blue);
 	
 	// Input callback methods
 	void keyPressed(int key);

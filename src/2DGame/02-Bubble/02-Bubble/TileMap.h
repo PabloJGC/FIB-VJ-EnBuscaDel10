@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include "Tile.h"
 #include "Texture.h"
 #include "ShaderProgram.h"
 
@@ -42,7 +43,7 @@ public:
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	
 private:
-	void prepareLayer(int* layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
+	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
 
@@ -56,7 +57,7 @@ private:
 	int tileSize, blockSize;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	int *mapLayer0, *mapLayer1; // Layer 1 is for background.
+	Tile **mapLayer0, **mapLayer1; // Layer 1 is for background.
 
 };
 

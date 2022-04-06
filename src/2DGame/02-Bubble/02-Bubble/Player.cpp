@@ -14,7 +14,7 @@
 #define DASH_TIME 200
 #define DASH_MAX_SPEED 0.75f
 #define DASH_MIN_SPEED 0.5f
-#define WALL_JUMP_TIME 190
+#define WALL_JUMP_TIME 200
 #define WALL_JUMP_MAX_SPEED 0.7f
 #define WALL_JUMP_MIN_SPEED 0.5f
 #define WALL_JUMP_DISTANCE 3
@@ -213,7 +213,7 @@ void Player::updateState(int deltaTime) {
 		else {
 			dashTimer -= deltaTime;
 			if (dashTimer <= 0) {
-				state = JUMPING;
+				state = NORMAL;
 				jumpAngle = 60;
 			}
 		}
