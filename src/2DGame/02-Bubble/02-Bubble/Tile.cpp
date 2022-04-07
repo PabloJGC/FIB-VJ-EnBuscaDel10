@@ -1,5 +1,6 @@
 #include "Tile.h"
 #include "SpikesTile.h"
+#include "SpringTile.h"
 
 Tile* Tile::createTile(int id, glm::ivec2 pos, int size) {
 	switch (id) {
@@ -18,6 +19,10 @@ Tile* Tile::createTile(int id, glm::ivec2 pos, int size) {
 		case 228: {
 			Tile* ret = new SpikesTile(id, pos, size, SpikesTile::Orientation(id - 225));
 			return ret;
+		}
+		case 145:
+		case 146: {
+			return new SpringTile(id, pos, size);
 		}
 		default: {
 			return new Tile(id, pos, size);
@@ -57,9 +62,6 @@ Tile::Tile(int id, glm::ivec2 pos, int size) {
 			transparent = false;
 			break;
 	}
-
-	dynamic = false;
-	deathZone = false;
 }
 
 bool Tile::isTransparent() const

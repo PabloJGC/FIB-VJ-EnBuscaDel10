@@ -17,6 +17,8 @@ TileMap* TileMap::createTileMap(const string& levelFile, const glm::vec2& minCoo
 
 TileMap::TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program)
 {
+	staticTileCountLayer0 = 0;
+	staticTileCountLayer1 = 0;
 	loadLevel(levelFile);
 	prepareArrays(minCoords, program);
 }
@@ -32,19 +34,53 @@ TileMap::~TileMap()
 
 void TileMap::render(Layer layer) const
 {
+	int staticTileCount;
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
 	switch (layer) {
-		case BACKGROUND_LAYER: glBindVertexArray(vao0); // Background.
-				break;
-		case LEVEL_LAYER: glBindVertexArray(vao1);
-				break;
+		case LEVEL_LAYER:  // Background.
+			staticTileCount = staticTileCountLayer0;
+			glBindVertexArray(vao0);
+			break;
+		case BACKGROUND_LAYER:
+			staticTileCount = staticTileCountLayer1;
+			glBindVertexArray(vao1);
+			break;
 	}
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
-	glDrawArrays(GL_TRIANGLES, 0, 6 * mapSize.x * mapSize.y);
+	glDrawArrays(GL_TRIANGLES, 0, 6 * staticTileCount);
 	glDisable(GL_TEXTURE_2D);
-	
+}
+
+void TileMap::renderDynamic(Layer layer) {
+	switch (layer) {
+		case LEVEL_LAYER: {  // Background.
+			for (int j = 0; j < mapSize.y; j++) {
+				for (int i = 0; i < mapSize.x; i++) {
+					mapLayer0[j * mapSize.x + i]->render();
+				}
+			}
+			break;
+		}
+		case BACKGROUND_LAYER: {
+			for (int j = 0; j < mapSize.y; j++) {
+				for (int i = 0; i < mapSize.x; i++) {
+					mapLayer1[j * mapSize.x + i]->render();
+				}
+			}
+			break;
+		}
+	}
+}
+
+void TileMap::update(int deltaTime) {
+	for (int j = 0; j < mapSize.y; j++) {
+		for (int i = 0; i < mapSize.x; i++) {
+			mapLayer0[j*mapSize.x + i]->update(deltaTime);
+			mapLayer1[j*mapSize.x + i]->update(deltaTime);
+		}
+	}
 }
 
 void TileMap::free()
@@ -96,6 +132,7 @@ bool TileMap::loadLevel(const string& levelFile)
 			fin >> tile_id;
 			cout << tile_id << endl;
 			mapLayer0[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i*tileSize, j*tileSize), tileSize);
+			staticTileCountLayer0 += !mapLayer0[j * mapSize.x + i]->isDynamic();
 		}
 		//fin.get(tile);
 #ifndef _WIN32
@@ -111,6 +148,7 @@ bool TileMap::loadLevel(const string& levelFile)
 			fin >> tile_id;
 			cout << tile_id << endl;
 			mapLayer1[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i*tileSize, j*tileSize), tileSize);
+			staticTileCountLayer1 += !mapLayer1[j * mapSize.x + i]->isDynamic();
 		}
 		//fin.get(tile);
 #ifndef _WIN32
@@ -138,26 +176,31 @@ void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::ve
 			if (id != 0)
 			{
 				// Non-empty tile
-				nTiles++;
-				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
-				texCoordTile[0] = glm::vec2(float((id - 1) % tilesheetSize.x) / tilesheetSize.x, float((id - 1) / tilesheetSize.x) / tilesheetSize.y);
-				texCoordTile[1] = texCoordTile[0] + tileTexSize;
-				//texCoordTile[0] += halfTexel;
-				texCoordTile[1] -= halfTexel;
-				// First triangle
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
-				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y);
-				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
-				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
-				// Second triangle
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y);
-				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
-				vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
-				vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
-				vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockSize);
-				vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
+				if (!tile->isDynamic()) {
+					nTiles++;
+					posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * tileSize);
+					texCoordTile[0] = glm::vec2(float((id - 1) % tilesheetSize.x) / tilesheetSize.x, float((id - 1) / tilesheetSize.x) / tilesheetSize.y);
+					texCoordTile[1] = texCoordTile[0] + tileTexSize;
+					//texCoordTile[0] += halfTexel;
+					texCoordTile[1] -= halfTexel;
+					// First triangle
+					vertices.push_back(posTile.x); vertices.push_back(posTile.y);
+					vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
+					vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y);
+					vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[0].y);
+					vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
+					vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
+					// Second triangle
+					vertices.push_back(posTile.x); vertices.push_back(posTile.y);
+					vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[0].y);
+					vertices.push_back(posTile.x + blockSize); vertices.push_back(posTile.y + blockSize);
+					vertices.push_back(texCoordTile[1].x); vertices.push_back(texCoordTile[1].y);
+					vertices.push_back(posTile.x); vertices.push_back(posTile.y + blockSize);
+					vertices.push_back(texCoordTile[0].x); vertices.push_back(texCoordTile[1].y);
+				}
+				else {
+					tile->init(program);
+				}
 			}
 		}
 	}
@@ -275,6 +318,24 @@ bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) co
 	for (int x = x0; x <= x1; x++) {
 		for (int y = y0; y <= y1; y++) {
 			if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isDeathZone(pos, size)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool TileMap::enteredSpring(const glm::ivec2& pos, const glm::ivec2& size) {
+	int x0, x1, y0, y1;
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y0 = pos.y / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
+	for (int x = x0; x <= x1; x++) {
+		for (int y = y0; y <= y1; y++) {
+			if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isSpring()) {
+				SpringTile* st = (SpringTile*)(mapLayer0[y * mapSize.x + x]);
+				st->setPressed();
 				return true;
 			}
 		}

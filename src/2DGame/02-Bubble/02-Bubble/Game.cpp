@@ -6,7 +6,7 @@
 void Game::init()
 {
 	setBackgroundColor(0.5f, 0.5f, 0.7f);
-	currentLevel = 1;
+	currentLevel = 3;
 	bPlay = true;
 	scene.init(currentLevel);
 }

@@ -4,7 +4,6 @@
 
 SpikesTile::SpikesTile(int id, glm::ivec2 pos, int size, Orientation orientation) : Tile(id, pos, size) {
 	this->orientation = orientation;
-	deathZone = true;
 }
 
 bool SpikesTile::isDeathZone(glm::ivec2 playerPos, glm::ivec2 playerSize) const {

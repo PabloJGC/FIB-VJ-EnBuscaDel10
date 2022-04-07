@@ -2,6 +2,7 @@
 #define _TILE_INCLUDE
 
 #include <glm/glm.hpp>
+#include "Sprite.h"
 
 class Tile {
 
@@ -10,16 +11,19 @@ class Tile {
 		Tile(int id, glm::ivec2 pos, int size);
 		bool isTransparent() const;
 		int getId() const;
+		virtual bool isDynamic() const { return false; }
 		virtual bool isDeathZone(glm::ivec2 playerPos, glm::ivec2 playerSize) const;
+		virtual bool isSpring() const { return false; }
+		virtual void init(ShaderProgram& shaderProgram) {}
+		virtual void update(int deltaTime) { }
+		virtual void render() const { }
 
 	private:
 		int id;
 		bool transparent;
-		bool dynamic;
 	protected:
 		glm::ivec2 pos;
 		int size;
-		bool deathZone;
 };
 
 #endif // _TILE_INCLUDE

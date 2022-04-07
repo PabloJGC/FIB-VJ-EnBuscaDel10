@@ -39,8 +39,9 @@ private:
 	bool dead;
 	glm::ivec2 tileMapDispl, spriteSize, hitboxSize, hitboxOffset;
 	glm::fvec2 posPlayer, velocity, dashDirection;
+	float jumpSpeed;
 	int dashTimer;
-	int jumpAngle, startY;
+	int jumpAngle;
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
@@ -48,6 +49,7 @@ private:
 	void updateState(int deltaTime);
 	bool wallAt(FacingDirection facingDirection, int offset) const;
 	void wallJump(FacingDirection facingDirection);
+	void jump(float speed);
 	void dash();
 	void move();
 	inline void updatePosition(int deltaTime);

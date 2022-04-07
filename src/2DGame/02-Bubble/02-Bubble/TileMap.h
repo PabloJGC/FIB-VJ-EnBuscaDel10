@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "ShaderProgram.h"
 #include "Tile.h"
+#include "SpringTile.h"
 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
@@ -30,6 +31,8 @@ public:
 	~TileMap();
 
 	void render(Layer layer) const;
+	void renderDynamic(Layer layer);
+	void update(int deltaTime);
 	void free();
 	
 	int getTileSize() const { return tileSize; }
@@ -41,6 +44,7 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool enteredSpring(const glm::ivec2& pos, const glm::ivec2& size);
 
 private:
 	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
@@ -54,7 +58,7 @@ private:
 	GLuint vbo0, vbo1;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 position, mapSize, tilesheetSize, playerInitPos;
-	int tileSize, blockSize;
+	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	Tile **mapLayer0, **mapLayer1; // Layer 1 is for background.

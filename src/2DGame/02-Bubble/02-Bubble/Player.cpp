@@ -6,16 +6,17 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 6
+#define JUMP_ANGLE_STEP 5
 #define RUN_MAX_SPEED 0.25f
 #define FALL_SPEED 0.25f
 #define CLIMB_FALL_SPEED 0.05f
-#define JUMP_MAX_SPEED 0.6f
+#define JUMP_MAX_SPEED 0.5f
+#define SPRING_MAX_SPEED 0.9f
 #define DASH_TIME 200
 #define DASH_MAX_SPEED 0.75f
 #define DASH_MIN_SPEED 0.5f
 #define WALL_JUMP_TIME 200
-#define WALL_JUMP_MAX_SPEED 0.7f
+#define WALL_JUMP_MAX_SPEED 0.75f
 #define WALL_JUMP_MIN_SPEED 0.5f
 #define WALL_JUMP_DISTANCE 8
 #define PIXEL_SIZE 4
@@ -87,7 +88,7 @@ bool Player::update(int deltaTime)
 	}
 	case JUMPING: {
 		move();
-		velocity.y = min(FALL_SPEED, -JUMP_MAX_SPEED * cos(3.14159f * jumpAngle / 180.f));
+		velocity.y = min(FALL_SPEED, -jumpSpeed * cos(3.14159f * jumpAngle / 180.f));
 		break;
 	}
 	case DASHING: {
@@ -106,8 +107,13 @@ bool Player::update(int deltaTime)
 	}
 
 	updatePosition(deltaTime);
+
 	if (map->enteredDeathZone(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize))
 		die();
+	else if (map->enteredSpring(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize)) {
+		canDash = true;
+		jump(SPRING_MAX_SPEED);
+	}
 
 	return posPlayer.y < 0;
 }
@@ -136,8 +142,7 @@ void Player::updateState(int deltaTime) {
 	case NORMAL: {
 		if (Game::instance().getJumpKeyPressed()) {
 			if (grounded) {
-				state = JUMPING;
-				jumpAngle = 0;
+				jump(JUMP_MAX_SPEED);
 			}
 			else if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
@@ -218,6 +223,14 @@ void Player::updateState(int deltaTime) {
 		break;
 	}
 	case WALL_JUMPING: {
+		if (Game::instance().getJumpKeyPressed()) {
+			if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
+				wallJump(RIGHT);
+			}
+			else if (wallAt(LEFT, WALL_JUMP_DISTANCE)) {
+				wallJump(LEFT);
+			}
+		}
 		if (canDash && Game::instance().getDashKeyPressed()) {
 			dash();
 		}
@@ -225,7 +238,6 @@ void Player::updateState(int deltaTime) {
 			dashTimer -= deltaTime;
 			if (dashTimer <= 0) {
 				state = NORMAL;
-				jumpAngle = 60;
 			}
 		}
 		break;
@@ -247,6 +259,12 @@ void Player::wallJump(FacingDirection facingDirection) {
 
 	dashTimer = WALL_JUMP_TIME;
 	state = WALL_JUMPING;
+}
+
+void Player::jump(float speed) {
+	state = JUMPING;
+	jumpAngle = 0;
+	jumpSpeed = speed;
 }
 
 void Player::dash() {
