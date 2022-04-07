@@ -17,7 +17,7 @@
 #define WALL_JUMP_TIME 200
 #define WALL_JUMP_MAX_SPEED 0.7f
 #define WALL_JUMP_MIN_SPEED 0.5f
-#define WALL_JUMP_DISTANCE 3
+#define WALL_JUMP_DISTANCE 8
 #define PIXEL_SIZE 4
 
 
@@ -71,6 +71,10 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 bool Player::update(int deltaTime)
 {
+	// De momento die y respawn están separadas por si al final hacemos alguna animación de muerte.
+	if (dead) {
+		respawn();
+	}
 	sprite->update(deltaTime);
 
 	updateState(deltaTime);
@@ -102,17 +106,24 @@ bool Player::update(int deltaTime)
 	}
 
 	updatePosition(deltaTime);
-	dead = posPlayer.y > (map->getMapSize().y * map->getTileSize());
-	if (dead) {
-		posPlayer = map->getPlayerInitPos();
-		canDash = true;
-		canClimb = false;
-		dead = false;
-		state = NORMAL;
-		facingDirection = RIGHT;
-		sprite->changeAnimation(STAND_RIGHT);
-	}
+	if (map->enteredDeathZone(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize))
+		die();
+
 	return posPlayer.y < 0;
+}
+
+void Player::die() {
+	dead = true;
+}
+
+void Player::respawn() {
+	posPlayer = map->getPlayerInitPos();
+	canDash = true;
+	canClimb = false;
+	dead = false;
+	state = NORMAL;
+	facingDirection = RIGHT;
+	sprite->changeAnimation(STAND_RIGHT);
 }
 
 void Player::updateState(int deltaTime) {

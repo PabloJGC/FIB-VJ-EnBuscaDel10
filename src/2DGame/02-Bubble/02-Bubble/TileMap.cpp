@@ -95,7 +95,7 @@ bool TileMap::loadLevel(const string& levelFile)
 		{
 			fin >> tile_id;
 			cout << tile_id << endl;
-			mapLayer0[j * mapSize.x + i] = new Tile(tile_id);
+			mapLayer0[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i*tileSize, j*tileSize), tileSize);
 		}
 		//fin.get(tile);
 #ifndef _WIN32
@@ -110,7 +110,7 @@ bool TileMap::loadLevel(const string& levelFile)
 		{
 			fin >> tile_id;
 			cout << tile_id << endl;
-			mapLayer1[j * mapSize.x + i] = new Tile(tile_id);
+			mapLayer1[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i*tileSize, j*tileSize), tileSize);
 		}
 		//fin.get(tile);
 #ifndef _WIN32
@@ -260,5 +260,24 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) con
 		}
 	}
 
+	return false;
+}
+
+bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const {
+	if (pos.y > mapSize.y*tileSize)
+		return true;
+	int x0, x1, y0, y1;
+
+	x0 = pos.x/tileSize;
+	x1 = (pos.x + size.x - 1)/tileSize;
+	y0 = pos.y/tileSize;
+	y1 = (pos.y + size.y - 1)/tileSize;
+	for (int x = x0; x <= x1; x++) {
+		for (int y = y0; y <= y1; y++) {
+			if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isDeathZone(pos, size)) {
+				return true;
+			}
+		}
+	}
 	return false;
 }
