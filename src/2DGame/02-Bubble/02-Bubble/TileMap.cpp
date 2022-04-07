@@ -306,6 +306,26 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) con
 	return false;
 }
 
+void TileMap::breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size) {
+	int x0, x1, y0, y1;
+
+	x0 = (pos.x - 1) / tileSize;
+	x1 = (pos.x + size.x) / tileSize;
+	y0 = (pos.y) / tileSize;
+	y1 = (pos.y + size.y) / tileSize;
+	for (int x = x0; x <= x1; x++) {
+		for (int y = y0; y <= y1; y++) {
+			if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isFragile()) {
+				FragileTile* ft = (FragileTile*)(mapLayer0[y * mapSize.x + x]);
+				if (x == x0 || x == x1 || y == y1)
+					ft->setBreaking();
+				else
+					ft->setBlocked();
+			}
+		}
+	}
+}
+
 bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const {
 	if (pos.y > mapSize.y*tileSize)
 		return true;

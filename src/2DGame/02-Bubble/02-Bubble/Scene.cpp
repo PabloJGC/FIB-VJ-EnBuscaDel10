@@ -91,8 +91,8 @@ void Scene::init(int level)
 int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	bool nextLevel = player->update(deltaTime);
 	map->update(deltaTime);
+	bool nextLevel = player->update(deltaTime);
 	return level + int(nextLevel);
 }
 

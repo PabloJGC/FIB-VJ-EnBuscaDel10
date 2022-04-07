@@ -8,6 +8,7 @@
 #include "ShaderProgram.h"
 #include "Tile.h"
 #include "SpringTile.h"
+#include "FragileTile.h"
 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
@@ -43,6 +44,7 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
+	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool enteredSpring(const glm::ivec2& pos, const glm::ivec2& size);
 

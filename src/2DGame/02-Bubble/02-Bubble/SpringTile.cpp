@@ -32,7 +32,6 @@ void SpringTile::update(int deltaTime) {
 			sprite->changeAnimation(NORMAL);
 		}
 	}
-	//sprite->update(deltaTime);
 }
 
 void SpringTile::render() const {

@@ -14,14 +14,15 @@ class Tile {
 		virtual bool isDynamic() const { return false; }
 		virtual bool isDeathZone(glm::ivec2 playerPos, glm::ivec2 playerSize) const;
 		virtual bool isSpring() const { return false; }
+		virtual bool isFragile() const { return false; }
 		virtual void init(ShaderProgram& shaderProgram) {}
 		virtual void update(int deltaTime) { }
 		virtual void render() const { }
 
 	private:
 		int id;
-		bool transparent;
 	protected:
+		bool transparent;
 		glm::ivec2 pos;
 		int size;
 };

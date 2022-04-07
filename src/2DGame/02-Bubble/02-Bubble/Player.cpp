@@ -12,12 +12,12 @@
 #define CLIMB_FALL_SPEED 0.05f
 #define JUMP_MAX_SPEED 0.5f
 #define SPRING_MAX_SPEED 0.9f
-#define DASH_TIME 200
+#define DASH_TIME 150
 #define DASH_MAX_SPEED 0.75f
 #define DASH_MIN_SPEED 0.5f
-#define WALL_JUMP_TIME 200
-#define WALL_JUMP_MAX_SPEED 0.75f
-#define WALL_JUMP_MIN_SPEED 0.5f
+#define WALL_JUMP_TIME 230
+#define WALL_JUMP_MAX_SPEED 0.7f
+#define WALL_JUMP_MIN_SPEED 0.3f
 #define WALL_JUMP_DISTANCE 8
 #define PIXEL_SIZE 4
 
@@ -92,7 +92,7 @@ bool Player::update(int deltaTime)
 		break;
 	}
 	case DASHING: {
-		velocity = dashDirection * (DASH_MIN_SPEED + (DASH_MAX_SPEED - DASH_MIN_SPEED) * (dashTimer / DASH_TIME));
+		velocity = dashDirection * (DASH_MIN_SPEED + (DASH_MAX_SPEED - DASH_MIN_SPEED) * (float(dashTimer) / DASH_TIME));
 		break;
 	}
 	case CLIMBING: {
@@ -101,18 +101,21 @@ bool Player::update(int deltaTime)
 		break;
 	}
 	case WALL_JUMPING: {
-		velocity = dashDirection * (WALL_JUMP_MIN_SPEED + (WALL_JUMP_MAX_SPEED - WALL_JUMP_MIN_SPEED) * (dashTimer / WALL_JUMP_TIME));
+		velocity = dashDirection * (WALL_JUMP_MIN_SPEED + (WALL_JUMP_MAX_SPEED - WALL_JUMP_MIN_SPEED) * (float(dashTimer) / WALL_JUMP_TIME));
 		break;
 	}
 	}
 
 	updatePosition(deltaTime);
 
-	if (map->enteredDeathZone(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize))
+	if (map->enteredDeathZone(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
 		die();
-	else if (map->enteredSpring(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize)) {
-		canDash = true;
-		jump(SPRING_MAX_SPEED);
+	else {
+		map->breakFragileTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
+		if (map->enteredSpring(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize)) {
+			canDash = true;
+			jump(SPRING_MAX_SPEED);
+		}
 	}
 
 	return posPlayer.y < 0;
