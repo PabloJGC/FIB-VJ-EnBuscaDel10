@@ -6,7 +6,7 @@
 void Game::init()
 {
 	setBackgroundColor(0.5f, 0.5f, 0.7f);
-	currentLevel = 3;
+	currentLevel = 1;
 	bPlay = true;
 	scene.init(currentLevel);
 }
@@ -40,6 +40,10 @@ void Game::keyPressed(int key)
 {
 	if(key == 27) // Escape code
 		bPlay = false;
+	else if (key >= 48 && key <= 57) {
+		currentLevel = key - 47;
+		scene.init(currentLevel);
+	}
 	keys[key] = true;
 	if (keyStatus[key] == UP)
 		keyStatus[key] = PRESSED;
