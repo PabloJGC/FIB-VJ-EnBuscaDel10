@@ -1,5 +1,5 @@
 TILEMAP
-4 4							-- Player position
+1 14							-- Player position
 16 16 							-- Size of tile map in tiles
 32 32 							      -- Tile size & block size
 images/textures.png 	-- Tilesheet

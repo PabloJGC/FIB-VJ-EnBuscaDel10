@@ -40,10 +40,10 @@ public:
 	glm::ivec2 getMapSize() const { return mapSize; }
 	glm::ivec2 getPlayerInitPos() const { return tileSize*playerInitPos; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
+	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
+	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
+	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool enteredSpring(const glm::ivec2& pos, const glm::ivec2& size);

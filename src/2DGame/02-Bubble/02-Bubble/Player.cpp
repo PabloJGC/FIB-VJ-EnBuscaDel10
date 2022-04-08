@@ -136,7 +136,8 @@ void Player::respawn() {
 }
 
 void Player::updateState(int deltaTime) {
-	grounded = map->collisionMoveDown(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize);
+	int dummy;
+	grounded = map->collisionMoveDown(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize, dummy);
 	if (grounded && state != DASHING)
 		canDash = true;
 	canClimb = !grounded && velocity.y > 0;
@@ -158,8 +159,8 @@ void Player::updateState(int deltaTime) {
 			if (canDash && Game::instance().getDashKeyPressed()) {
 				dash();
 			}
-			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize)) ||
-				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize)))) {
+			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(1.f, 0.f)) + hitboxOffset, hitboxSize, dummy)) ||
+				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-1.f, 0.f)) + hitboxOffset, hitboxSize, dummy)))) {
 				state = CLIMBING;
 			}
 		}
@@ -249,9 +250,10 @@ void Player::updateState(int deltaTime) {
 }
 
 bool Player::wallAt(FacingDirection direction, int offset) const {
+	int dummy;
 	if (direction == RIGHT)
-		return map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(offset, 0)) + hitboxOffset, hitboxSize);
-	return map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-offset, 0)) + hitboxOffset, hitboxSize);
+		return map->collisionMoveRight(glm::ivec2(posPlayer + glm::vec2(offset, 0)) + hitboxOffset, hitboxSize, dummy);
+	return map->collisionMoveLeft(glm::ivec2(posPlayer + glm::vec2(-offset, 0)) + hitboxOffset, hitboxSize, dummy);
 }
 
 void Player::wallJump(FacingDirection facingDirection) {
@@ -324,9 +326,10 @@ inline void Player::updatePosition(int deltaTime) {
 		facingDirection = LEFT;
 		if (sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
-		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize)) {
+		int colX = -1;
+		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 			deltaVelocity.x = 0;
-			posPlayer.x = map->getTileSize() * int((posPlayer.x + spriteSize.x) / map->getTileSize()) - hitboxOffset.x;
+			posPlayer.x = map->getTileSize()*(colX + 1) - hitboxOffset.x;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -335,10 +338,10 @@ inline void Player::updatePosition(int deltaTime) {
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
 		int mapSize = map->getMapSize().x*map->getTileSize();
-		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize))
-		{
+		int colX = map->getMapSize().x;
+		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 			deltaVelocity.x = 0;
-			posPlayer.x = map->getTileSize() * int(posPlayer.x / map->getTileSize()) + hitboxOffset.x;
+			posPlayer.x = map->getTileSize()*(colX - 1) + hitboxOffset.x;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
@@ -350,16 +353,18 @@ inline void Player::updatePosition(int deltaTime) {
 	}
 
 	if (velocity.y < 0) {
-		if (map->collisionMoveUp(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize)) {
+		int colY;
+		if (map->collisionMoveUp(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, colY)) {
 			deltaVelocity.y = 0;
-			posPlayer.y = map->getTileSize() * int((posPlayer.y) / map->getTileSize());
+			posPlayer.y = map->getTileSize()*(colY + 1) - hitboxOffset.y;;
 		}
 	}
 	else if (velocity.y > 0) {
-		if (map->collisionMoveDown(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize))
+		int colY;
+		if (map->collisionMoveDown(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, colY))
 		{
 			deltaVelocity.y = 0;
-			posPlayer.y = map->getTileSize() * int((posPlayer.y + spriteSize.y - 1) / map->getTileSize());
+			posPlayer.y = map->getTileSize()*(colY - 1) + hitboxOffset.y;
 		}
 	}
 
