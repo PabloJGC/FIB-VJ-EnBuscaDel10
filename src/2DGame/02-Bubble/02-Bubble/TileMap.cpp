@@ -36,19 +36,23 @@ TileMap::~TileMap()
 void TileMap::updateEntities(int deltaTime) {
 	for (int i = 0; i < globitsCount; ++i)
 		globits[i]->update(deltaTime);
-	for (int i = 0; i < chestCount; ++i)
+	for (int i = 0; i < chestCount; ++i) {
 		chests[i]->update(deltaTime);
-	for (int i = 0; i < chestCount; ++i)
 		keys[i]->update(deltaTime);
+	}
+	for (int i = 0; i < wingedFileCount; ++i)
+		wingedFiles[i]->update(deltaTime);
 }
 
 void TileMap::renderEntities() {
 	for (int i = 0; i < globitsCount; ++i)
 		globits[i]->render();
-	for (int i = 0; i < chestCount; ++i)
+	for (int i = 0; i < chestCount; ++i) {
 		chests[i]->render();
-	for (int i = 0; i < chestCount; ++i)
 		keys[i]->render();
+	}
+	for (int i = 0; i < wingedFileCount; ++i)
+		wingedFiles[i]->render();
 }
 
 void TileMap::render(Layer layer) const
@@ -205,6 +209,16 @@ bool TileMap::loadLevel(const string& levelFile)
 				}
 				break;
 			}
+			case 3: { // WINGED FILE
+				wingedFileCount = count;
+				wingedFiles = new WingedFile*[count];
+				for (int j = 0; j < count; ++j) {
+					int x, y;
+					fin >> x >> y;
+					wingedFiles[j] = new WingedFile(glm::vec2(x*tileSize, y*tileSize));
+				}
+				break;
+			}
 		}
 	}
 
@@ -272,10 +286,12 @@ void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::ve
 
 	for (int i = 0; i < globitsCount; ++i)
 		globits[i]->init(program);
-	for (int i = 0; i < chestCount; ++i)
+	for (int i = 0; i < chestCount; ++i) {
 		chests[i]->init(program);
-	for (int i = 0; i < chestCount; ++i)
 		keys[i]->init(program);
+	}
+	for (int i = 0; i < wingedFileCount; ++i)
+		wingedFiles[i]->init(program);
 }
 
 void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
@@ -438,9 +454,13 @@ bool TileMap::enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size) {
 	return false;
 }
 
-bool TileMap::enteredZip(const glm::ivec2& pos, const glm::ivec2& size) {
+bool TileMap::enteredFile(const glm::ivec2& pos, const glm::ivec2& size) {
 	for (int i = 0; i < chestCount; ++i) {
 		if (chests[i]->collides(pos, size))
+			return true;
+	}
+	for (int i = 0; i < wingedFileCount; ++i) {
+		if (wingedFiles[i]->collides(pos, size))
 			return true;
 	}
 	return false;
@@ -449,5 +469,11 @@ bool TileMap::enteredZip(const glm::ivec2& pos, const glm::ivec2& size) {
 void TileMap::pickUpKeys(const glm::ivec2& pos, const glm::ivec2& size) {
 	for (int i = 0; i < chestCount; ++i) {
 		keys[i]->pickUp(pos, size);
+	}
+}
+
+void TileMap::startleWingedFiles() {
+	for (int i = 0; i < wingedFileCount; ++i) {
+		wingedFiles[i]->startle();
 	}
 }

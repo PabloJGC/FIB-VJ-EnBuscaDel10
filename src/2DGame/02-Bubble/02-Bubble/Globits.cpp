@@ -17,7 +17,7 @@ void Globits::init(ShaderProgram& shaderProgram) {
 
 	sprite->setNumberAnimations(2);
 
-	sprite->setAnimationSpeed(NORMAL, 4);
+	sprite->setAnimationSpeed(NORMAL, 3);
 	sprite->addKeyframe(NORMAL, glm::vec2(7.f/16.f, 56.f/128.f));
 	sprite->addKeyframe(NORMAL, glm::vec2(8.f/16.f, 56.f/128.f));
 	sprite->addKeyframe(NORMAL, glm::vec2(9.f/16.f, 56.f/128.f));

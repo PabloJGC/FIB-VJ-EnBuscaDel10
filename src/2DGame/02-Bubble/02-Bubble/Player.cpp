@@ -117,7 +117,7 @@ bool Player::update(int deltaTime)
 		}
 		if (map->enteredGlobits(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
 			canDash = true;
-		if (map->enteredZip(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
+		if (map->enteredFile(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
 			Game::instance().increaseScore();
 	}
 
@@ -276,6 +276,7 @@ void Player::jump(float speed) {
 }
 
 void Player::dash() {
+	map->startleWingedFiles();
 	dashDirection.y = Game::instance().getSpecialKey(GLUT_KEY_UP) ? -1
 		: Game::instance().getSpecialKey(GLUT_KEY_DOWN) ? 1
 		: 0;

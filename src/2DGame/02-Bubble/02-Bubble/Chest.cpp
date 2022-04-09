@@ -7,7 +7,7 @@ Chest::Chest(glm::ivec2 pos) {
 	this->pos = pos;
 	initPos = pos.y;
 	spriteSize = glm::ivec2(32, 32);
-	colliderSize = glm::ivec2(24, 28);
+	colliderSize = glm::ivec2(32, 32);
 }
 
 void Chest::init(ShaderProgram& shaderProgram) {
