@@ -80,6 +80,10 @@ void Scene::init(int level)
 		file = "levels/memorial.txt";
 		break;
 	}
+	case 13: {
+		file = "levels/victory.txt";
+		break;
+	}
 	}
 	}
 	map = TileMap::createTileMap(file, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -117,7 +121,7 @@ void Scene::render()
 	map->renderEntities();
 	map->render(TileMap::LEVEL_LAYER);
 	map->renderDynamic(TileMap::LEVEL_LAYER);
-	
+
 	// Player:
 	player->render();
 	// Layers rendered in front of the player:
