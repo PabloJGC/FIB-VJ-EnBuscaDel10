@@ -20,9 +20,9 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	if(map != NULL)
+	if (map != NULL)
 		delete map;
-	if(player != NULL)
+	if (player != NULL)
 		delete player;
 }
 
@@ -33,50 +33,54 @@ void Scene::init(int level)
 	initShaders();
 	string file;
 	switch (level) {
-		case 1: {
-			file = "levels/level01.txt";
-			break;
-		}
-		case 2: {
-			file = "levels/level02.txt";
-			break;
-		}
-		case 3: {
-			file = "levels/level03.txt";
-			break;
-		}
-		case 4: {
-			file = "levels/level04.txt";
-			break;
-		}
-		case 5: {
-			file = "levels/level05.txt";
-			break;
-		}
-		case 6: {
-			file = "levels/level06.txt";
-			break;
-		case 7: {
-			file = "levels/level07.txt";
-			break;
-		}
-		case 8: {
-			file = "levels/level08.txt";
-			break;
-		}
-		case 9: {
-			file = "levels/level09.txt";
-			break;
-		}
-		case 10: {
-			file = "levels/level10.txt";
-			break;
-		}
-		case 11: {
-			file = "levels/memorial.txt";
-			break;
-		}
-		}
+	case 1: {
+		file = "levels/level01.txt";
+		break;
+	}
+	case 2: {
+		file = "levels/level02.txt";
+		break;
+	}
+	case 3: {
+		file = "levels/level03.txt";
+		break;
+	}
+	case 4: {
+		file = "levels/level04.txt";
+		break;
+	}
+	case 5: {
+		file = "levels/level05.txt";
+		break;
+	}
+	case 6: {
+		file = "levels/halfTime.txt";
+		break;
+	case 7: {
+		file = "levels/level06.txt";
+		break;
+	}
+	case 8: {
+		file = "levels/level07.txt";
+		break;
+	}
+	case 9: {
+		file = "levels/level08.txt";
+		break;
+	}
+	case 10: {
+		file = "levels/level09.txt";
+		break;
+	}
+	case 11: {
+		file = "levels/level10.txt";
+		break;
+	}
+	case 12: {
+		file = "levels/memorial.txt";
+		break;
+	}
+	}
 	}
 	map = TileMap::createTileMap(file, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
@@ -121,13 +125,13 @@ void Scene::initShaders()
 	Shader vShader, fShader;
 
 	vShader.initFromFile(VERTEX_SHADER, "shaders/texture.vert");
-	if(!vShader.isCompiled())
+	if (!vShader.isCompiled())
 	{
 		cout << "Vertex Shader Error" << endl;
 		cout << "" << vShader.log() << endl << endl;
 	}
 	fShader.initFromFile(FRAGMENT_SHADER, "shaders/texture.frag");
-	if(!fShader.isCompiled())
+	if (!fShader.isCompiled())
 	{
 		cout << "Fragment Shader Error" << endl;
 		cout << "" << fShader.log() << endl << endl;
@@ -136,7 +140,7 @@ void Scene::initShaders()
 	texProgram.addShader(vShader);
 	texProgram.addShader(fShader);
 	texProgram.link();
-	if(!texProgram.isLinked())
+	if (!texProgram.isLinked())
 	{
 		cout << "Shader Linking Error" << endl;
 		cout << "" << texProgram.log() << endl << endl;
@@ -145,6 +149,3 @@ void Scene::initShaders()
 	vShader.free();
 	fShader.free();
 }
-
-
-
