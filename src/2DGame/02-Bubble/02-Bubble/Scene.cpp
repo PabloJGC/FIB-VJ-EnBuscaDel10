@@ -56,6 +56,7 @@ void Scene::init(int level)
 	case 6: {
 		file = "levels/halfTime.txt";
 		break;
+	}
 	case 7: {
 		file = "levels/level06.txt";
 		break;
@@ -83,7 +84,6 @@ void Scene::init(int level)
 	case 13: {
 		file = "levels/victory.txt";
 		break;
-	}
 	}
 	}
 	map = TileMap::createTileMap(file, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
