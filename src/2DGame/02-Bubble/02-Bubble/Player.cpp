@@ -10,9 +10,9 @@
 #define CLIMB_FALL_SPEED 0.05f
 #define JUMP_MAX_SPEED 0.5f
 #define SPRING_MAX_SPEED 0.9f
-#define DASH_TIME 150
-#define DASH_MAX_SPEED 0.75f
-#define DASH_MIN_SPEED 0.5f
+#define DASH_TIME 140
+#define DASH_MAX_SPEED 0.65f
+#define DASH_MIN_SPEED 0.4f
 #define WALL_JUMP_TIME 230
 #define WALL_JUMP_MAX_SPEED 0.7f
 #define WALL_JUMP_MIN_SPEED 0.3f
