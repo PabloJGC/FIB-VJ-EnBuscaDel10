@@ -9,6 +9,7 @@
 #include "Tile.h"
 #include "SpringTile.h"
 #include "FragileTile.h"
+#include "Globits.h"
 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
@@ -31,6 +32,8 @@ public:
 	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
 	~TileMap();
 
+	void updateEntities(int deltaTime);
+	void renderEntities();
 	void render(Layer layer) const;
 	void renderDynamic(Layer layer);
 	void update(int deltaTime);
@@ -47,6 +50,7 @@ public:
 	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool enteredSpring(const glm::ivec2& pos, const glm::ivec2& size);
+	bool enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size);
 
 private:
 	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
@@ -60,11 +64,11 @@ private:
 	GLuint vbo0, vbo1;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 position, mapSize, tilesheetSize, playerInitPos;
-	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1;
+	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	Tile **mapLayer0, **mapLayer1; // Layer 1 is for background.
-
+	Globits** globits;
 };
 
 

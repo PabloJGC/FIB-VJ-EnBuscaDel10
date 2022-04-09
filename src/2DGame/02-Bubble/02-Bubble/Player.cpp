@@ -1,5 +1,3 @@
-#include <cmath>
-#include <iostream>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Player.h"
@@ -116,6 +114,8 @@ bool Player::update(int deltaTime)
 			canDash = true;
 			jump(SPRING_MAX_SPEED);
 		}
+		if (map->enteredGlobits(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
+			canDash = true;
 	}
 
 	return posPlayer.y < 0;

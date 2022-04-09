@@ -29,8 +29,19 @@ TileMap::~TileMap()
 		delete mapLayer0;
 	if (mapLayer1 != NULL)
 		delete mapLayer1;
+	if (globits != NULL)
+		delete globits;
 }
 
+void TileMap::updateEntities(int deltaTime) {
+	for (int i = 0; i < globitsCount; ++i)
+		globits[i]->update(deltaTime);
+}
+
+void TileMap::renderEntities() {
+	for (int i = 0; i < globitsCount; ++i)
+		globits[i]->render();
+}
 
 void TileMap::render(Layer layer) const
 {
@@ -51,6 +62,7 @@ void TileMap::render(Layer layer) const
 	glEnableVertexAttribArray(texCoordLocation);
 	glDrawArrays(GL_TRIANGLES, 0, 6 * staticTileCount);
 	glDisable(GL_TEXTURE_2D);
+	glBindVertexArray(0);
 }
 
 void TileMap::renderDynamic(Layer layer) {
@@ -155,7 +167,33 @@ bool TileMap::loadLevel(const string& levelFile)
 		fin.get(tile);
 #endif
 	}
+
+	int entityCount = 0;
+	fin >> entityCount;
+	for (int i = 0; i < entityCount; ++i) {
+		int entityId, count;
+		fin >> entityId >> count;
+		switch (entityId) {
+			case 0: { // GLOBITS
+				globitsCount = count;
+				globits = new Globits*[count];
+				for (int j = 0; j < count; ++j) {
+					int x, y;
+					fin >> x >> y;
+					globits[j] = new Globits(glm::vec2(x*tileSize, y*tileSize));
+				}
+				break;
+			}
+		}
+	}
+
 	fin.close();
+
+	//
+	/*globits = new Globits * [1];
+	globits[0] = new Globits(glm::vec2(24, 10*4));
+	globitsCount = 1;*/
+	//
 
 	return true;
 	}
@@ -214,6 +252,10 @@ void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::ve
 	}
 	posLocation = program.bindVertexAttribute("position", 2, 4 * sizeof(float), 0);
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	for (int i = 0; i < globitsCount; ++i)
+		globits[i]->init(program);
 }
 
 void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
@@ -364,6 +406,14 @@ bool TileMap::enteredSpring(const glm::ivec2& pos, const glm::ivec2& size) {
 				return true;
 			}
 		}
+	}
+	return false;
+}
+
+bool TileMap::enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size) {
+	for (int i = 0; i < globitsCount; ++i) {
+		if (globits[i]->collides(pos, size))
+			return true;
 	}
 	return false;
 }

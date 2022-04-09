@@ -1,7 +1,7 @@
 #ifndef _PLAYER_INCLUDE
 #define _PLAYER_INCLUDE
 
-
+#include <cmath>
 #include "Sprite.h"
 #include "TileMap.h"
 

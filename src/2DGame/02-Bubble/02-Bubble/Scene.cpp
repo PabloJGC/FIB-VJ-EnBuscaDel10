@@ -92,6 +92,7 @@ int Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	map->update(deltaTime);
+	map->updateEntities(deltaTime);
 	bool nextLevel = player->update(deltaTime);
 	return level + int(nextLevel);
 }
@@ -109,8 +110,10 @@ void Scene::render()
 	// Layers rendered behind the player:
 	map->render(TileMap::BACKGROUND_LAYER);
 	map->renderDynamic(TileMap::BACKGROUND_LAYER);
+	map->renderEntities();
 	map->render(TileMap::LEVEL_LAYER);
 	map->renderDynamic(TileMap::LEVEL_LAYER);
+	
 	// Player:
 	player->render();
 	// Layers rendered in front of the player:

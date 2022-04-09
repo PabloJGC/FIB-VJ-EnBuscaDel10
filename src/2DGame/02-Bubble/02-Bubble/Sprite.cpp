@@ -36,6 +36,8 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	shaderProgram = program;
 	currentAnimation = -1;
 	position = glm::vec2(0.f);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void Sprite::update(int deltaTime)
@@ -63,7 +65,12 @@ void Sprite::render() const
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisableVertexAttribArray(posLocation);
+	glDisableVertexAttribArray(texCoordLocation);
 	glDisable(GL_TEXTURE_2D);
+	glBindVertexArray(0);
+	shaderProgram->setUniform2f("texCoordDispl", 0, 0);
+	shaderProgram->setUniformMatrix4f("modelview", glm::mat4(1.0f));
 }
 
 void Sprite::free()
