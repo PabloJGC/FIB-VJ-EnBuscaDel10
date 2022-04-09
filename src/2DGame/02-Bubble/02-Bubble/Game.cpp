@@ -36,6 +36,10 @@ void Game::setBackgroundColor(float red, float green, float blue) {
 	glClearColor(red, green, blue, 1.0f);
 }
 
+void Game::increaseScore() {
+	++score;
+}
+
 void Game::keyPressed(int key)
 {
 	if(key == 27) // Escape code

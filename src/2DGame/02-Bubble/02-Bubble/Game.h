@@ -35,6 +35,7 @@ public:
 	bool update(int deltaTime);
 	void render();
 	void setBackgroundColor(float red, float green, float blue);
+	void increaseScore();
 	
 	// Input callback methods
 	void keyPressed(int key);
@@ -56,7 +57,7 @@ private:
 		PRESSED,
 		DOWN
 	};
-	int currentLevel;
+	int currentLevel, score = 0;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 

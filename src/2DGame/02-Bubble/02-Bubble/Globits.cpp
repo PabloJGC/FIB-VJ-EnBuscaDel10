@@ -47,7 +47,7 @@ bool Globits::collides(glm::vec2 playerPos, glm::vec2 playerSize) {
 void Globits::update(int deltaTime) {
 	timer += deltaTime;
 	if (state == NORMAL) {
-		pos.y = initPos + FLOAT_HEIGHT * sin(3.14159f * float(timer) / FLOAT_PERIOD);
+		pos.y = initPos + FLOAT_HEIGHT*sin(3.14159f*float(timer)/FLOAT_PERIOD);
 		sprite->setPosition((glm::ivec2(pos) / 4) * 4);
 		sprite->update(deltaTime);
 	}

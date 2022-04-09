@@ -10,10 +10,10 @@
 #define CLIMB_FALL_SPEED 0.05f
 #define JUMP_MAX_SPEED 0.5f
 #define SPRING_MAX_SPEED 0.9f
-#define DASH_TIME 140
-#define DASH_MAX_SPEED 0.65f
+#define DASH_TIME 150
+#define DASH_MAX_SPEED 0.7f
 #define DASH_MIN_SPEED 0.4f
-#define WALL_JUMP_TIME 230
+#define WALL_JUMP_TIME 200
 #define WALL_JUMP_MAX_SPEED 0.7f
 #define WALL_JUMP_MIN_SPEED 0.3f
 #define WALL_JUMP_DISTANCE 8
@@ -110,12 +110,15 @@ bool Player::update(int deltaTime)
 		die();
 	else {
 		map->breakFragileTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
+		map->pickUpKeys(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
 		if (map->enteredSpring(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize)) {
 			canDash = true;
 			jump(SPRING_MAX_SPEED);
 		}
 		if (map->enteredGlobits(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
 			canDash = true;
+		if (map->enteredZip(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
+			Game::instance().increaseScore();
 	}
 
 	return posPlayer.y < 0;

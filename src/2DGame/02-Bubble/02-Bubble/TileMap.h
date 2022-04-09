@@ -10,7 +10,7 @@
 #include "SpringTile.h"
 #include "FragileTile.h"
 #include "Globits.h"
-
+#include "Key.h"
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -48,9 +48,11 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
+	void pickUpKeys(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
 	bool enteredSpring(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size);
+	bool enteredZip(const glm::ivec2& pos, const glm::ivec2& size);
 
 private:
 	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
@@ -64,11 +66,13 @@ private:
 	GLuint vbo0, vbo1;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 position, mapSize, tilesheetSize, playerInitPos;
-	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount;
+	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount, chestCount;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	Tile **mapLayer0, **mapLayer1; // Layer 1 is for background.
 	Globits** globits;
+	Chest** chests;
+	Key** keys;
 };
 
 

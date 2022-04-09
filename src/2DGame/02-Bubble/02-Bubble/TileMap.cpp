@@ -36,11 +36,19 @@ TileMap::~TileMap()
 void TileMap::updateEntities(int deltaTime) {
 	for (int i = 0; i < globitsCount; ++i)
 		globits[i]->update(deltaTime);
+	for (int i = 0; i < chestCount; ++i)
+		chests[i]->update(deltaTime);
+	for (int i = 0; i < chestCount; ++i)
+		keys[i]->update(deltaTime);
 }
 
 void TileMap::renderEntities() {
 	for (int i = 0; i < globitsCount; ++i)
 		globits[i]->render();
+	for (int i = 0; i < chestCount; ++i)
+		chests[i]->render();
+	for (int i = 0; i < chestCount; ++i)
+		keys[i]->render();
 }
 
 void TileMap::render(Layer layer) const
@@ -184,16 +192,23 @@ bool TileMap::loadLevel(const string& levelFile)
 				}
 				break;
 			}
+			case 2: { // CHEST
+				chestCount = count;
+				chests = new Chest*[count];
+				keys = new Key*[count];
+				for (int j = 0; j < count; ++j) {
+					int x, y;
+					fin >> x >> y;
+					chests[j] = new Chest(glm::vec2(x*tileSize, y*tileSize));
+					fin >> x >> y;
+					keys[j] = new Key(glm::vec2(x*tileSize, y*tileSize), chests[j]);
+				}
+				break;
+			}
 		}
 	}
 
 	fin.close();
-
-	//
-	/*globits = new Globits * [1];
-	globits[0] = new Globits(glm::vec2(24, 10*4));
-	globitsCount = 1;*/
-	//
 
 	return true;
 	}
@@ -254,8 +269,13 @@ void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::ve
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
 	for (int i = 0; i < globitsCount; ++i)
 		globits[i]->init(program);
+	for (int i = 0; i < chestCount; ++i)
+		chests[i]->init(program);
+	for (int i = 0; i < chestCount; ++i)
+		keys[i]->init(program);
 }
 
 void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
@@ -416,4 +436,18 @@ bool TileMap::enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size) {
 			return true;
 	}
 	return false;
+}
+
+bool TileMap::enteredZip(const glm::ivec2& pos, const glm::ivec2& size) {
+	for (int i = 0; i < chestCount; ++i) {
+		if (chests[i]->collides(pos, size))
+			return true;
+	}
+	return false;
+}
+
+void TileMap::pickUpKeys(const glm::ivec2& pos, const glm::ivec2& size) {
+	for (int i = 0; i < chestCount; ++i) {
+		keys[i]->pickUp(pos, size);
+	}
 }
