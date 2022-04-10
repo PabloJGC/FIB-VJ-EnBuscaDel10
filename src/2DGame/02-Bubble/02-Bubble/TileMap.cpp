@@ -480,6 +480,10 @@ bool TileMap::enteredFile(const glm::ivec2& pos, const glm::ivec2& size) {
 		if (wingedFiles[i]->collides(pos, size))
 			return true;
 	}
+	for (int i = 0; i < fileCount; ++i) {
+		if (files[i]->collides(pos, size))
+			return true;
+	}
 	return false;
 }
 
