@@ -409,6 +409,57 @@ void TileMap::breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size) {
 	}
 }
 
+void TileMap::breakTile(int x, int y) {
+	if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isBreakable()) {
+		BreakableTile* bt = (BreakableTile*)(mapLayer0[y * mapSize.x + x]);
+		bt->setBroken();
+	}
+}
+
+void TileMap::breakBlock(int x, int y) {
+	int x0 = x - 1;
+	int x1 = x + 1;
+	int y0 = y - 1;
+	int y1 = y + 1;
+	for (int x = x0; x <= x1; ++x) {
+		for (int y = y0; y <= y1; ++y) {
+			breakTile(x, y);
+		}
+	}
+}
+
+void TileMap::breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size, int& wall) {
+	wall = -1;
+	int x0, x1, y0, y1;
+
+	x0 = (pos.x - 1) / tileSize;
+	x1 = (pos.x + size.x) / tileSize;
+	y0 = (pos.y - 1) / tileSize;
+	y1 = (pos.y + size.y) / tileSize;
+
+	for (int y = y0 + 1; y < y1; y++) {
+		if (!tilesOutOfBounds(glm::ivec2(x0, y)) && mapLayer0[y * mapSize.x + x0]->isBreakable()) {
+			wall = 1;
+			breakBlock(x0, y);
+		}
+		if (!tilesOutOfBounds(glm::ivec2(x1, y)) && mapLayer0[y * mapSize.x + x1]->isBreakable()) {
+			wall = 0;
+			breakBlock(x1, y);
+		}
+	}
+
+	for (int x = x0; x <= x1; x++) {
+		if (!tilesOutOfBounds(glm::ivec2(x, y0)) && mapLayer0[y0*mapSize.x + x]->isBreakable()) {
+			wall = -1;
+			breakBlock(x, y0);
+		}
+		if (!tilesOutOfBounds(glm::ivec2(x, y1)) && mapLayer0[y1*mapSize.x + x]->isBreakable()) {
+			wall = -1;
+			breakBlock(x, y1);
+		}
+	}
+}
+
 bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const {
 	if (pos.y > mapSize.y*tileSize)
 		return true;

@@ -111,6 +111,14 @@ bool Player::update(int deltaTime)
 	else {
 		map->breakFragileTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
 		map->pickUpKeys(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
+		if (state == DASHING) {
+			int wall;
+			map->breakBreakableTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize, wall);
+			if (wall != -1) {
+				wallJump(FacingDirection(wall));
+			}
+
+		}
 		if (map->enteredSpring(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize)) {
 			canDash = true;
 			jump(SPRING_MAX_SPEED);

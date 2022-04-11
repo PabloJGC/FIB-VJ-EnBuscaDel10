@@ -15,16 +15,15 @@ class Tile {
 		virtual bool isDeathZone(glm::ivec2 playerPos, glm::ivec2 playerSize) const;
 		virtual bool isSpring() const { return false; }
 		virtual bool isFragile() const { return false; }
+		virtual bool isBreakable() const { return false; }
 		virtual void init(ShaderProgram& shaderProgram) {}
 		virtual void update(int deltaTime) { }
 		virtual void render() const { }
 
-	private:
-		int id;
 	protected:
 		bool transparent;
 		glm::ivec2 pos;
-		int size;
+		int id, size;
 };
 
 #endif // _TILE_INCLUDE
