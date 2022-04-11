@@ -195,7 +195,7 @@ bool TileMap::loadLevel(const string& levelFile)
 			globitsCount = count;
 			globits = new Globits * [count];
 			for (int j = 0; j < count; ++j) {
-				int x, y;
+				float x, y;
 				fin >> x >> y;
 				globits[j] = new Globits(glm::vec2(x * tileSize, y * tileSize));
 			}
@@ -205,7 +205,7 @@ bool TileMap::loadLevel(const string& levelFile)
 			fileCount = count;
 			files = new File * [count];
 			for (int j = 0; j < count; ++j) {
-				int x, y;
+				float x, y;
 				fin >> x >> y;
 				files[j] = new File(glm::vec2(x * tileSize, y * tileSize));
 			}
@@ -216,7 +216,7 @@ bool TileMap::loadLevel(const string& levelFile)
 			chests = new Chest * [count];
 			keys = new Key * [count];
 			for (int j = 0; j < count; ++j) {
-				int x, y;
+				float x, y;
 				fin >> x >> y;
 				chests[j] = new Chest(glm::vec2(x * tileSize, y * tileSize));
 				fin >> x >> y;
@@ -228,7 +228,7 @@ bool TileMap::loadLevel(const string& levelFile)
 			wingedFileCount = count;
 			wingedFiles = new WingedFile * [count];
 			for (int j = 0; j < count; ++j) {
-				int x, y;
+				float x, y;
 				fin >> x >> y;
 				wingedFiles[j] = new WingedFile(glm::vec2(x * tileSize, y * tileSize));
 			}

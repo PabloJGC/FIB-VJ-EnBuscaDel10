@@ -53,9 +53,11 @@ bool WingedFile::collides(glm::vec2 playerPos, glm::vec2 playerSize) {
 }
 
 void WingedFile::startle() {
-	timer = 0;
-	state = STARTLED;
-	sprite->changeAnimation(STARTLED);
+	if (state == NORMAL) {
+		timer = 0;
+		state = STARTLED;
+		sprite->changeAnimation(STARTLED);
+	}
 }
 
 void WingedFile::update(int deltaTime) {
