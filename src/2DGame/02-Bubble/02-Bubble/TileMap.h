@@ -13,6 +13,7 @@
 #include "Globits.h"
 #include "Key.h"
 #include "WingedFile.h"
+#include "File.h" 
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -29,9 +30,9 @@ public:
 	};
 
 	// Tile maps can only be created inside an OpenGL context
-	static TileMap *createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	static TileMap* createTileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 
-	TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program);
+	TileMap(const string& levelFile, const glm::vec2& minCoords, ShaderProgram& program);
 	~TileMap();
 
 	void updateEntities(int deltaTime);
@@ -40,14 +41,14 @@ public:
 	void renderDynamic(Layer layer);
 	void update(int deltaTime);
 	void free();
-	
+
 	int getTileSize() const { return tileSize; }
 	glm::ivec2 getMapSize() const { return mapSize; }
-	glm::ivec2 getPlayerInitPos() const { return tileSize*playerInitPos; }
+	glm::ivec2 getPlayerInitPos() const { return tileSize * playerInitPos; }
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const;
+	bool collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
+	bool collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
+	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
 	void breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size, int& wall);
@@ -72,17 +73,16 @@ private:
 	GLuint vbo0, vbo1;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 position, mapSize, tilesheetSize, playerInitPos;
-	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount, chestCount, wingedFileCount;
+	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount, chestCount, wingedFileCount, fileCount;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
-	Tile **mapLayer0, **mapLayer1; // Layer 1 is for background.
+	Tile** mapLayer0, ** mapLayer1; // Layer 1 is for background.
 	Globits** globits;
 	Chest** chests;
 	Key** keys;
 	WingedFile** wingedFiles;
+	File** files;
 };
 
 
 #endif // _TILE_MAP_INCLUDE
-
-

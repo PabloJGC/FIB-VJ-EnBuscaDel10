@@ -42,6 +42,9 @@ void TileMap::updateEntities(int deltaTime) {
 	}
 	for (int i = 0; i < wingedFileCount; ++i)
 		wingedFiles[i]->update(deltaTime);
+	for (int i = 0; i < fileCount; ++i)
+		files[i]->update(deltaTime);
+
 }
 
 void TileMap::renderEntities() {
@@ -53,6 +56,8 @@ void TileMap::renderEntities() {
 	}
 	for (int i = 0; i < wingedFileCount; ++i)
 		wingedFiles[i]->render();
+	for (int i = 0; i < fileCount; ++i)
+		files[i]->render();
 }
 
 void TileMap::render(Layer layer) const
@@ -61,14 +66,14 @@ void TileMap::render(Layer layer) const
 	glEnable(GL_TEXTURE_2D);
 	tilesheet.use();
 	switch (layer) {
-		case LEVEL_LAYER:  // Background.
-			staticTileCount = staticTileCountLayer0;
-			glBindVertexArray(vao0);
-			break;
-		case BACKGROUND_LAYER:
-			staticTileCount = staticTileCountLayer1;
-			glBindVertexArray(vao1);
-			break;
+	case LEVEL_LAYER:  // Background.
+		staticTileCount = staticTileCountLayer0;
+		glBindVertexArray(vao0);
+		break;
+	case BACKGROUND_LAYER:
+		staticTileCount = staticTileCountLayer1;
+		glBindVertexArray(vao1);
+		break;
 	}
 	glEnableVertexAttribArray(posLocation);
 	glEnableVertexAttribArray(texCoordLocation);
@@ -79,30 +84,30 @@ void TileMap::render(Layer layer) const
 
 void TileMap::renderDynamic(Layer layer) {
 	switch (layer) {
-		case LEVEL_LAYER: {  // Background.
-			for (int j = 0; j < mapSize.y; j++) {
-				for (int i = 0; i < mapSize.x; i++) {
-					mapLayer0[j * mapSize.x + i]->render();
-				}
+	case LEVEL_LAYER: {  // Background.
+		for (int j = 0; j < mapSize.y; j++) {
+			for (int i = 0; i < mapSize.x; i++) {
+				mapLayer0[j * mapSize.x + i]->render();
 			}
-			break;
 		}
-		case BACKGROUND_LAYER: {
-			for (int j = 0; j < mapSize.y; j++) {
-				for (int i = 0; i < mapSize.x; i++) {
-					mapLayer1[j * mapSize.x + i]->render();
-				}
+		break;
+	}
+	case BACKGROUND_LAYER: {
+		for (int j = 0; j < mapSize.y; j++) {
+			for (int i = 0; i < mapSize.x; i++) {
+				mapLayer1[j * mapSize.x + i]->render();
 			}
-			break;
 		}
+		break;
+	}
 	}
 }
 
 void TileMap::update(int deltaTime) {
 	for (int j = 0; j < mapSize.y; j++) {
 		for (int i = 0; i < mapSize.x; i++) {
-			mapLayer0[j*mapSize.x + i]->update(deltaTime);
-			mapLayer1[j*mapSize.x + i]->update(deltaTime);
+			mapLayer0[j * mapSize.x + i]->update(deltaTime);
+			mapLayer1[j * mapSize.x + i]->update(deltaTime);
 		}
 	}
 }
@@ -148,14 +153,14 @@ bool TileMap::loadLevel(const string& levelFile)
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 
-	mapLayer0 = new Tile*[mapSize.x * mapSize.y];
+	mapLayer0 = new Tile * [mapSize.x * mapSize.y];
 	for (int j = 0; j < mapSize.y; j++)
 	{
 		for (int i = 0; i < mapSize.x; i++)
 		{
 			fin >> tile_id;
 			cout << tile_id << endl;
-			mapLayer0[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i*tileSize, j*tileSize), tileSize);
+			mapLayer0[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i * tileSize, j * tileSize), tileSize);
 			staticTileCountLayer0 += !mapLayer0[j * mapSize.x + i]->isDynamic();
 		}
 		//fin.get(tile);
@@ -164,14 +169,14 @@ bool TileMap::loadLevel(const string& levelFile)
 #endif
 	}
 
-	mapLayer1 = new Tile*[mapSize.x * mapSize.y];
+	mapLayer1 = new Tile * [mapSize.x * mapSize.y];
 	for (int j = 0; j < mapSize.y; j++)
 	{
 		for (int i = 0; i < mapSize.x; i++)
 		{
 			fin >> tile_id;
 			cout << tile_id << endl;
-			mapLayer1[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i*tileSize, j*tileSize), tileSize);
+			mapLayer1[j * mapSize.x + i] = Tile::createTile(tile_id, glm::ivec2(i * tileSize, j * tileSize), tileSize);
 			staticTileCountLayer1 += !mapLayer1[j * mapSize.x + i]->isDynamic();
 		}
 		//fin.get(tile);
@@ -186,46 +191,56 @@ bool TileMap::loadLevel(const string& levelFile)
 		int entityId, count;
 		fin >> entityId >> count;
 		switch (entityId) {
-			case 0: { // GLOBITS
-				globitsCount = count;
-				globits = new Globits*[count];
-				for (int j = 0; j < count; ++j) {
-					int x, y;
-					fin >> x >> y;
-					globits[j] = new Globits(glm::vec2(x*tileSize, y*tileSize));
-				}
-				break;
+		case 0: { // GLOBITS
+			globitsCount = count;
+			globits = new Globits * [count];
+			for (int j = 0; j < count; ++j) {
+				int x, y;
+				fin >> x >> y;
+				globits[j] = new Globits(glm::vec2(x * tileSize, y * tileSize));
 			}
-			case 2: { // CHEST
-				chestCount = count;
-				chests = new Chest*[count];
-				keys = new Key*[count];
-				for (int j = 0; j < count; ++j) {
-					int x, y;
-					fin >> x >> y;
-					chests[j] = new Chest(glm::vec2(x*tileSize, y*tileSize));
-					fin >> x >> y;
-					keys[j] = new Key(glm::vec2(x*tileSize, y*tileSize), chests[j]);
-				}
-				break;
+			break;
+		}
+		case 1: { //FILE
+			fileCount = count;
+			files = new File * [count];
+			for (int j = 0; j < count; ++j) {
+				int x, y;
+				fin >> x >> y;
+				files[j] = new File(glm::vec2(x * tileSize, y * tileSize));
 			}
-			case 3: { // WINGED FILE
-				wingedFileCount = count;
-				wingedFiles = new WingedFile*[count];
-				for (int j = 0; j < count; ++j) {
-					int x, y;
-					fin >> x >> y;
-					wingedFiles[j] = new WingedFile(glm::vec2(x*tileSize, y*tileSize));
-				}
-				break;
+			break;
+		}
+		case 2: { // CHEST
+			chestCount = count;
+			chests = new Chest * [count];
+			keys = new Key * [count];
+			for (int j = 0; j < count; ++j) {
+				int x, y;
+				fin >> x >> y;
+				chests[j] = new Chest(glm::vec2(x * tileSize, y * tileSize));
+				fin >> x >> y;
+				keys[j] = new Key(glm::vec2(x * tileSize, y * tileSize), chests[j]);
 			}
+			break;
+		}
+		case 3: { // WINGED FILE
+			wingedFileCount = count;
+			wingedFiles = new WingedFile * [count];
+			for (int j = 0; j < count; ++j) {
+				int x, y;
+				fin >> x >> y;
+				wingedFiles[j] = new WingedFile(glm::vec2(x * tileSize, y * tileSize));
+			}
+			break;
+		}
 		}
 	}
 
 	fin.close();
 
 	return true;
-	}
+}
 
 void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program) {
 	Tile* tile;
@@ -292,6 +307,8 @@ void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::ve
 	}
 	for (int i = 0; i < wingedFileCount; ++i)
 		wingedFiles[i]->init(program);
+	for (int i = 0; i < fileCount; ++i)
+		files[i]->init(program);
 }
 
 void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
@@ -308,52 +325,52 @@ inline bool TileMap::tilesOutOfBounds(glm::ivec2 coords) const {
 	return coords.x < 0 || coords.y < 0 || coords.x >= mapSize.x || coords.y >= mapSize.y;
 }
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const
+bool TileMap::collisionMoveLeft(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const
 {
 	int x, y0, y1;
-	
+
 	x = pos.x / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
-	for(int y=y0; y<=y1; y++)
+	for (int y = y0; y <= y1; y++)
 	{
 		if (!tilesOutOfBounds(glm::ivec2(x, y)) && !mapLayer0[y * mapSize.x + x]->isTransparent()) {
 			colTile = x;
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const
+bool TileMap::collisionMoveRight(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const
 {
 	int x, y0, y1;
-	
+
 	x = (pos.x + size.x - 1) / tileSize;
 	y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
-	for (int y=y0; y<=y1; y++)
+	for (int y = y0; y <= y1; y++)
 	{
 		if (!tilesOutOfBounds(glm::ivec2(x, y)) && !mapLayer0[y * mapSize.x + x]->isTransparent()) {
 			colTile = x;
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
-bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int& colTile) const
+bool TileMap::collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const
 {
 	int x0, x1, y;
-	
+
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = (pos.y + size.y - 1) / tileSize;
-	for (int x=x0; x<=x1; x++)
+	for (int x = x0; x <= x1; x++)
 	{
-		if (!tilesOutOfBounds(glm::ivec2(x, y)) && !mapLayer0[y*mapSize.x + x]->isTransparent()) {
+		if (!tilesOutOfBounds(glm::ivec2(x, y)) && !mapLayer0[y * mapSize.x + x]->isTransparent()) {
 			colTile = y;
 			//if(*posY - tileSize * y + size.y <= 4)
 			//{
@@ -362,7 +379,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 			//}
 		}
 	}
-	
+
 	return false;
 }
 
@@ -375,7 +392,7 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int
 	y = pos.y / tileSize;
 	for (int x = x0; x <= x1; x++)
 	{
-		if (!tilesOutOfBounds(glm::ivec2(x, y)) && !mapLayer0[y*mapSize.x + x]->isTransparent())
+		if (!tilesOutOfBounds(glm::ivec2(x, y)) && !mapLayer0[y * mapSize.x + x]->isTransparent())
 		{
 			//if(*posY - tileSize * y + size.y <= 4)
 			//{
@@ -461,14 +478,14 @@ void TileMap::breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size,
 }
 
 bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const {
-	if (pos.y > mapSize.y*tileSize)
+	if (pos.y > mapSize.y * tileSize)
 		return true;
 	int x0, x1, y0, y1;
 
-	x0 = pos.x/tileSize;
-	x1 = (pos.x + size.x - 1)/tileSize;
-	y0 = pos.y/tileSize;
-	y1 = (pos.y + size.y - 1)/tileSize;
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y0 = pos.y / tileSize;
+	y1 = (pos.y + size.y - 1) / tileSize;
 	for (int x = x0; x <= x1; x++) {
 		for (int y = y0; y <= y1; y++) {
 			if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isDeathZone(pos, size)) {
@@ -512,6 +529,10 @@ bool TileMap::enteredFile(const glm::ivec2& pos, const glm::ivec2& size) {
 	}
 	for (int i = 0; i < wingedFileCount; ++i) {
 		if (wingedFiles[i]->collides(pos, size))
+			return true;
+	}
+	for (int i = 0; i < fileCount; ++i) {
+		if (files[i]->collides(pos, size))
 			return true;
 	}
 	return false;
