@@ -2,6 +2,7 @@
 #include "SpikesTile.h"
 #include "SpringTile.h"
 #include "FragileTile.h"
+#include "BreakableTile.h"
 
 Tile* Tile::createTile(int id, glm::ivec2 pos, int size) {
 	switch (id) {
@@ -13,18 +14,22 @@ Tile* Tile::createTile(int id, glm::ivec2 pos, int size) {
 		case 146:
 		case 193:
 		case 305:*/
+		case 65:
+		case 66:
+		case 81:
+		case 82: {
+			return new BreakableTile(id, pos, size);
+		}
 		case 305:
 		case 306:
 		case 307: {
-			Tile* ret = new FragileTile(id, pos, size);
-			return ret;
+			return new FragileTile(id, pos, size);
 		}
 		case 225:
 		case 226:
 		case 227:
 		case 228: {
-			Tile* ret = new SpikesTile(id, pos, size, SpikesTile::Orientation(id - 225));
-			return ret;
+			return new SpikesTile(id, pos, size, SpikesTile::Orientation(id - 225));
 		}
 		case 145:
 		case 146: {

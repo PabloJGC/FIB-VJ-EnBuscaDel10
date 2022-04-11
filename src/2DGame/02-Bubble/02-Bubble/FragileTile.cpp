@@ -5,7 +5,7 @@
 
 FragileTile::FragileTile(int id, glm::ivec2 pos, int size) : Tile(id, pos, size) {
 	timer = 0;
-	spriteSize = glm::ivec2(32, 32);
+	spriteSize = glm::ivec2(size, size);
 }
 
 void FragileTile::init(ShaderProgram& shaderProgram) {

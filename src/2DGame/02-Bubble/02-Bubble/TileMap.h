@@ -9,6 +9,7 @@
 #include "Tile.h"
 #include "SpringTile.h"
 #include "FragileTile.h"
+#include "BreakableTile.h"
 #include "Globits.h"
 #include "Key.h"
 #include "WingedFile.h"
@@ -50,6 +51,7 @@ public:
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
+	void breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size, int& wall);
 	void pickUpKeys(const glm::ivec2& pos, const glm::ivec2& size);
 	void startleWingedFiles();
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
@@ -59,8 +61,10 @@ public:
 
 private:
 	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
-	bool loadLevel(const string& levelFile);
-	void prepareArrays(const glm::vec2& minCoords, ShaderProgram& program);
+	bool loadLevel(const string &levelFile);
+	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	void breakBlock(int x, int y);
+	void breakTile(int x, int y);
 
 private:
 	inline bool tilesOutOfBounds(glm::ivec2 coords) const;
