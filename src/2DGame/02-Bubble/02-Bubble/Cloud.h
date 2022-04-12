@@ -16,6 +16,8 @@ class Cloud
 	public:
 		Cloud(glm::ivec2 pos, bool moveL);
 
+		glm::fvec2 getPosition() const;
+		float getSpeed() const;
 		void init(ShaderProgram& shaderProgram);
 		bool collides(glm::vec2 playerPos, glm::vec2 playerSize);
 		void update(int deltaTime, glm::ivec2 mapSize, int tileSize);
