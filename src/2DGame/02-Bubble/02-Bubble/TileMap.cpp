@@ -578,3 +578,23 @@ void TileMap::startleWingedFiles() {
 		wingedFiles[i]->startle();
 	}
 }
+
+bool TileMap::isAboveCloud(const glm::ivec2& pos, const glm::ivec2& size, float& cloudSpeed, int& colTile) {
+	for (int i = 0; i < cloudCountLeft; ++i) {
+		if (cloudsLeft[i]->collides(pos, size)) {
+			cloudSpeed = -cloudsLeft[i]->getSpeed();
+			glm::fvec2 p = cloudsLeft[i]->getPosition();
+			colTile = (p.y / tileSize);
+			return true;
+		}
+	}
+	for (int i = 0; i < cloudCountRight; ++i) {
+		if (cloudsRight[i]->collides(pos, size)) {
+			cloudSpeed = cloudsLeft[i]->getSpeed();
+			glm::fvec2 p = cloudsRight[i]->getPosition();
+			colTile = (p.y / tileSize);
+			return true;
+		}
+	}
+	return false;
+}
