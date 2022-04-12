@@ -38,7 +38,7 @@ protected:
 		RIGHT,
 		LEFT
 	} facingDirection;
-	bool canDash, canClimb, grounded;
+	bool canDash, canClimb, grounded, aboveCloud;
 	bool dead;
 	glm::ivec2 tileMapDispl, spriteSize, hitboxSize, hitboxOffset;
 	glm::fvec2 posPlayer, velocity, dashDirection;
