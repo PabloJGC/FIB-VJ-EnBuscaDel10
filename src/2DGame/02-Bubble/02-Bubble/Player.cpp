@@ -36,6 +36,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 	canDash = true;
 	canClimb = false;
+	aboveCloud = false;
 	dead = false;
 	dashDirection = glm::ivec2(0);
 	spritesheet.loadFromFile("images/textures.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -156,7 +157,7 @@ void Player::updateState(int deltaTime) {
 	switch (state) {
 	case NORMAL: {
 		if (Game::instance().getJumpKeyPressed()) {
-			if (grounded) {
+			if (grounded || aboveCloud) {
 				jump(JUMP_MAX_SPEED);
 			}
 			else if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
@@ -341,7 +342,7 @@ inline void Player::updatePosition(int deltaTime) {
 		int colX = -1;
 		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 			deltaVelocity.x = 0;
-			posPlayer.x = map->getTileSize()*(colX + 1) - hitboxOffset.x;
+			posPlayer.x = map->getTileSize() * (colX + 1) - hitboxOffset.x;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 	}
@@ -349,11 +350,11 @@ inline void Player::updatePosition(int deltaTime) {
 		facingDirection = RIGHT;
 		if (sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
-		int mapSize = map->getMapSize().x*map->getTileSize();
+		int mapSize = map->getMapSize().x * map->getTileSize();
 		int colX = map->getMapSize().x;
 		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 			deltaVelocity.x = 0;
-			posPlayer.x = map->getTileSize()*(colX - 1) + hitboxOffset.x;
+			posPlayer.x = map->getTileSize() * (colX - 1) + hitboxOffset.x;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
@@ -368,7 +369,7 @@ inline void Player::updatePosition(int deltaTime) {
 		int colY;
 		if (map->collisionMoveUp(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, colY)) {
 			deltaVelocity.y = 0;
-			posPlayer.y = map->getTileSize()*(colY + 1) - hitboxOffset.y;;
+			posPlayer.y = map->getTileSize() * (colY + 1) - hitboxOffset.y;;
 		}
 	}
 	else if (velocity.y > 0) {
@@ -376,7 +377,28 @@ inline void Player::updatePosition(int deltaTime) {
 		if (map->collisionMoveDown(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, colY))
 		{
 			deltaVelocity.y = 0;
-			posPlayer.y = map->getTileSize()*(colY - 1) + hitboxOffset.y;
+			posPlayer.y = map->getTileSize() * (colY - 1) + hitboxOffset.y;
+		}
+		float cloudSpeed;
+		int colTile;
+		if (map->isAboveCloud(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset + glm::ivec2(0, hitboxSize.y), glm::ivec2(hitboxSize.x, 4), cloudSpeed, colTile)) {
+			aboveCloud = true;
+			canDash = true;
+			deltaVelocityX.x += cloudSpeed * deltaTime;
+			deltaVelocity.x += cloudSpeed * deltaTime;
+			deltaVelocity.y = 0;
+			int mapSize = map->getMapSize().x * map->getTileSize();
+			int colX = map->getMapSize().x;
+			if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
+				deltaVelocity.x = 0;
+				posPlayer.x = map->getTileSize() * (colX - 1) + hitboxOffset.x;
+			}
+			colX = -1;
+			if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
+				posPlayer.x = map->getTileSize() * (colX + 1) - hitboxOffset.x;
+				deltaVelocity.x = 0;
+			}
+			posPlayer.y = map->getTileSize() * (colTile - 1) + hitboxOffset.y;
 		}
 	}
 
