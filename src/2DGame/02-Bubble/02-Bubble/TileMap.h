@@ -14,6 +14,7 @@
 #include "Key.h"
 #include "WingedFile.h"
 #include "File.h" 
+#include "Cloud.h"
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -61,8 +62,8 @@ public:
 
 private:
 	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);
-	bool loadLevel(const string &levelFile);
-	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	bool loadLevel(const string& levelFile);
+	void prepareArrays(const glm::vec2& minCoords, ShaderProgram& program);
 	void breakBlock(int x, int y);
 	void breakTile(int x, int y);
 
@@ -73,7 +74,7 @@ private:
 	GLuint vbo0, vbo1;
 	GLint posLocation, texCoordLocation;
 	glm::ivec2 position, mapSize, tilesheetSize, playerInitPos;
-	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount, chestCount, wingedFileCount, fileCount;
+	int tileSize, blockSize, staticTileCountLayer0, staticTileCountLayer1, globitsCount, chestCount, wingedFileCount, fileCount, cloudCountLeft, cloudCountRight;
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	Tile** mapLayer0, ** mapLayer1; // Layer 1 is for background.
@@ -82,6 +83,8 @@ private:
 	Key** keys;
 	WingedFile** wingedFiles;
 	File** files;
+	Cloud** cloudsLeft;
+	Cloud** cloudsRight;
 };
 
 
