@@ -44,7 +44,10 @@ void TileMap::updateEntities(int deltaTime) {
 		wingedFiles[i]->update(deltaTime);
 	for (int i = 0; i < fileCount; ++i)
 		files[i]->update(deltaTime);
-
+	for (int i = 0; i < cloudCountLeft; ++i)
+		cloudsLeft[i]->update(deltaTime, mapSize, tileSize);
+	for (int i = 0; i < cloudCountRight; ++i)
+		cloudsRight[i]->update(deltaTime, mapSize, tileSize);
 }
 
 void TileMap::renderEntities() {
@@ -58,6 +61,10 @@ void TileMap::renderEntities() {
 		wingedFiles[i]->render();
 	for (int i = 0; i < fileCount; ++i)
 		files[i]->render();
+	for (int i = 0; i < cloudCountLeft; ++i)
+		cloudsLeft[i]->render();
+	for (int i = 0; i < cloudCountRight; ++i)
+		cloudsRight[i]->render();
 }
 
 void TileMap::render(Layer layer) const
@@ -236,7 +243,25 @@ bool TileMap::loadLevel(const string& levelFile)
 		}
 		}
 	}
+	
+	cloudCountLeft = 0;
+	fin >> cloudCountLeft;
+	for (int i = 0; i < cloudCountLeft; ++i) {
+		if (i == 0) cloudsLeft = new Cloud * [cloudCountLeft];
+		float x, y;
+		fin >> x >> y;
+		cloudsLeft[i] = new Cloud(glm::vec2(x * tileSize, y * tileSize), true);
+	}
 
+	cloudCountRight = 0;
+	fin >> cloudCountRight;
+	for (int i = 0; i < cloudCountRight; ++i) {
+		if (i == 0) cloudsRight = new Cloud * [cloudCountRight];
+		float x, y;
+		fin >> x >> y;
+		cloudsRight[i] = new Cloud(glm::vec2(x * tileSize, y * tileSize), false);
+	}
+	
 	fin.close();
 
 	return true;
@@ -309,6 +334,10 @@ void TileMap::prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::ve
 		wingedFiles[i]->init(program);
 	for (int i = 0; i < fileCount; ++i)
 		files[i]->init(program);
+	for (int i = 0; i < cloudCountLeft; ++i)
+		cloudsLeft[i]->init(program);
+	for (int i = 0; i < cloudCountRight; ++i)
+		cloudsRight[i]->init(program);
 }
 
 void TileMap::prepareArrays(const glm::vec2& minCoords, ShaderProgram& program)
@@ -466,11 +495,11 @@ void TileMap::breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size,
 	}
 
 	for (int x = x0; x <= x1; x++) {
-		if (!tilesOutOfBounds(glm::ivec2(x, y0)) && mapLayer0[y0*mapSize.x + x]->isBreakable()) {
+		if (!tilesOutOfBounds(glm::ivec2(x, y0)) && mapLayer0[y0 * mapSize.x + x]->isBreakable()) {
 			wall = -1;
 			breakBlock(x, y0);
 		}
-		if (!tilesOutOfBounds(glm::ivec2(x, y1)) && mapLayer0[y1*mapSize.x + x]->isBreakable()) {
+		if (!tilesOutOfBounds(glm::ivec2(x, y1)) && mapLayer0[y1 * mapSize.x + x]->isBreakable()) {
 			wall = -1;
 			breakBlock(x, y1);
 		}
