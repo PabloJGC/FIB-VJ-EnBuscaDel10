@@ -51,6 +51,8 @@ public:
 	bool getDashKeyPressed();
 	bool getSpecialKey(int key) const;
 
+	Scene* getScene();
+
 private:
 	enum KeyStatus{
 		UP,

@@ -5,7 +5,7 @@
 
 void Game::init()
 {
-	setBackgroundColor(0.5f, 0.5f, 0.7f);
+	setBackgroundColor(0.6f, 0.6f, 0.9f);
 	currentLevel = 1;
 	bPlay = true;
 	scene.init(currentLevel);
@@ -99,7 +99,6 @@ bool Game::getSpecialKey(int key) const
 	return specialKeys[key];
 }
 
-
-
-
-
+Scene* Game::getScene() {
+	return &scene;
+}
