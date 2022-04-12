@@ -19,13 +19,6 @@
 #define WALL_JUMP_DISTANCE 8
 #define PIXEL_SIZE 4
 
-
-enum PlayerAnims
-{
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT
-};
-
-
 void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 {
 	state = NORMAL;
@@ -42,25 +35,80 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	spritesheet.loadFromFile("images/textures.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(8. / 128., 8. / 256), &spritesheet, &shaderProgram);
 
-	sprite->setNumberAnimations(4);
+	sprite->setNumberAnimations(20);
 
 	sprite->setAnimationSpeed(STAND_LEFT, 10);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.4375f, 19.f / 32.f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(7.f / 16.f, 19.f / 32.f));
 
 	sprite->setAnimationSpeed(STAND_RIGHT, 10);
-	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.4375f, 16.f / 32.f));
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(7.f / 16.f, 16.f / 32.f));
 
 	sprite->setAnimationSpeed(MOVE_LEFT, 10);
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 19.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(7.f / 16.f, 19.f / 32.f));
 	sprite->addKeyframe(MOVE_LEFT, glm::vec2(8.f / 16.f, 19.f / 32.f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5625f, 19.f / 32.f));
-	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.4375f, 20.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(9.f / 16.f, 19.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(7.f / 16.f, 20.f / 32.f));
 
 	sprite->setAnimationSpeed(MOVE_RIGHT, 10);
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.4375f, 16.f / 32.f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(7.f / 16.f, 16.f / 32.f));
 	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(8.f / 16.f, 16.f / 32.f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5625f, 16.f / 32.f));
-	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.4375f, 0.53125f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(9.f / 16.f, 16.f / 32.f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(7.f / 16.f, 17.f / 32.f));
+
+	sprite->setAnimationSpeed(JUMP_LEFT, 10);
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(7.f / 16.f, 20.f / 32.f));
+
+	sprite->setAnimationSpeed(JUMP_RIGHT, 10);
+	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(7.f / 16.f, 17.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_UP_LEFT, 10);
+	sprite->addKeyframe(LOOK_UP_LEFT, glm::vec2(8.f / 16.f, 21.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_UP_RIGHT, 10);
+	sprite->addKeyframe(LOOK_UP_RIGHT, glm::vec2(8.f / 16.f, 18.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_DOWN_LEFT, 10);
+	sprite->addKeyframe(LOOK_DOWN_LEFT, glm::vec2(7.f / 16.f, 21.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_DOWN_RIGHT, 10);
+	sprite->addKeyframe(LOOK_DOWN_RIGHT, glm::vec2(7.f / 16.f, 18.f / 32.f));
+
+
+	sprite->setAnimationSpeed(STAND_LEFT_NO_DASH, 10);
+	sprite->addKeyframe(STAND_LEFT_NO_DASH, glm::vec2(7.f / 16.f, 25.f / 32.f));
+
+	sprite->setAnimationSpeed(STAND_RIGHT_NO_DASH, 10);
+	sprite->addKeyframe(STAND_RIGHT_NO_DASH, glm::vec2(7.f / 16.f, 22.f / 32.f));
+
+	sprite->setAnimationSpeed(MOVE_LEFT_NO_DASH, 10);
+	sprite->addKeyframe(MOVE_LEFT_NO_DASH, glm::vec2(7.f / 16.f, 25.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT_NO_DASH, glm::vec2(8.f / 16.f, 25.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT_NO_DASH, glm::vec2(9.f / 16.f, 25.f / 32.f));
+	sprite->addKeyframe(MOVE_LEFT_NO_DASH, glm::vec2(7.f / 16.f, 26.f / 32.f));
+
+	sprite->setAnimationSpeed(MOVE_RIGHT_NO_DASH, 10);
+	sprite->addKeyframe(MOVE_RIGHT_NO_DASH, glm::vec2(7.f / 16.f, 22.f / 32.f));
+	sprite->addKeyframe(MOVE_RIGHT_NO_DASH, glm::vec2(8.f / 16.f, 22.f / 32.f));
+	sprite->addKeyframe(MOVE_RIGHT_NO_DASH, glm::vec2(9.f / 16.f, 22.f / 32.f));
+	sprite->addKeyframe(MOVE_RIGHT_NO_DASH, glm::vec2(7.f / 16.f, 23.f / 32.f));
+
+	sprite->setAnimationSpeed(JUMP_LEFT_NO_DASH, 10);
+	sprite->addKeyframe(JUMP_LEFT_NO_DASH, glm::vec2(7.f / 16.f, 26.f / 32.f));
+
+	sprite->setAnimationSpeed(JUMP_RIGHT_NO_DASH, 10);
+	sprite->addKeyframe(JUMP_RIGHT_NO_DASH, glm::vec2(7.f / 16.f, 23.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_UP_LEFT_NO_DASH, 10);
+	sprite->addKeyframe(LOOK_UP_LEFT_NO_DASH, glm::vec2(8.f / 16.f, 27.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_UP_RIGHT_NO_DASH, 10);
+	sprite->addKeyframe(LOOK_UP_RIGHT_NO_DASH, glm::vec2(8.f / 16.f, 24.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_DOWN_LEFT_NO_DASH, 10);
+	sprite->addKeyframe(LOOK_DOWN_LEFT_NO_DASH, glm::vec2(7.f / 16.f, 27.f / 32.f));
+
+	sprite->setAnimationSpeed(LOOK_DOWN_RIGHT_NO_DASH, 10);
+	sprite->addKeyframe(LOOK_DOWN_RIGHT_NO_DASH, glm::vec2(7.f / 16.f, 24.f / 32.f));
 
 	sprite->changeAnimation(STAND_RIGHT);
 	facingDirection = RIGHT;
@@ -114,9 +162,12 @@ bool Player::update(int deltaTime)
 		map->pickUpKeys(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
 		if (state == DASHING) {
 			int wall;
-			map->breakBreakableTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize, wall);
-			if (wall != -1) {
-				wallJump(FacingDirection(wall));
+			bool bt = map->breakBreakableTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize, wall);
+			if (bt) {
+				canDash = true;
+				if (wall != -1) {
+					wallJump(FacingDirection(wall));
+				}
 			}
 
 		}
@@ -130,10 +181,13 @@ bool Player::update(int deltaTime)
 			Game::instance().increaseScore();
 	}
 
+	updateAnimation();
+
 	return posPlayer.y < 0;
 }
 
 void Player::die() {
+	Game::instance().getScene()->generateExplosionParticle(posPlayer);
 	dead = true;
 }
 
@@ -149,7 +203,11 @@ void Player::respawn() {
 
 void Player::updateState(int deltaTime) {
 	int dummy;
+	bool grounded_temp = grounded;
 	grounded = map->collisionMoveDown(glm::ivec2(posPlayer) + hitboxOffset + glm::ivec2(0, 1), hitboxSize, dummy);
+	if (!grounded_temp && grounded)
+		generateDustParticle();
+	
 	if (grounded && state != DASHING)
 		canDash = true;
 	canClimb = !grounded && velocity.y > 0;
@@ -261,6 +319,10 @@ void Player::updateState(int deltaTime) {
 	}
 }
 
+void Player::generateDustParticle() {
+	Game::instance().getScene()->generateDustParticle(posPlayer);
+}
+
 bool Player::wallAt(FacingDirection direction, int offset) const {
 	int dummy;
 	if (direction == RIGHT)
@@ -269,6 +331,7 @@ bool Player::wallAt(FacingDirection direction, int offset) const {
 }
 
 void Player::wallJump(FacingDirection facingDirection) {
+	generateDustParticle();
 	dashDirection.y = -1;
 	dashDirection.x = facingDirection == LEFT ? 1 : -1;
 
@@ -279,12 +342,14 @@ void Player::wallJump(FacingDirection facingDirection) {
 }
 
 void Player::jump(float speed) {
+	generateDustParticle();
 	state = JUMPING;
 	jumpAngle = 0;
 	jumpSpeed = speed;
 }
 
 void Player::dash() {
+	generateDustParticle();
 	map->startleWingedFiles();
 	dashDirection.y = Game::instance().getSpecialKey(GLUT_KEY_UP) ? -1
 		: Game::instance().getSpecialKey(GLUT_KEY_DOWN) ? 1
@@ -337,39 +402,42 @@ inline void Player::updatePosition(int deltaTime) {
 
 	if (velocity.x < 0) {
 		facingDirection = LEFT;
-		if (sprite->animation() != MOVE_LEFT)
-			sprite->changeAnimation(MOVE_LEFT);
+		/*if (sprite->animation() != MOVE_LEFT)
+			sprite->changeAnimation(MOVE_LEFT);*/
 		int colX = -1;
 		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 			deltaVelocity.x = 0;
-			posPlayer.x = map->getTileSize() * (colX + 1) - hitboxOffset.x;
-			sprite->changeAnimation(STAND_LEFT);
+			velocity.x = 0;
+			posPlayer.x = map->getTileSize()*(colX + 1) - hitboxOffset.x;
+			//sprite->changeAnimation(STAND_LEFT);
 		}
 	}
 	else if (velocity.x > 0) {
 		facingDirection = RIGHT;
-		if (sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		int mapSize = map->getMapSize().x * map->getTileSize();
+		/*if (sprite->animation() != MOVE_RIGHT)
+			sprite->changeAnimation(MOVE_RIGHT);*/
+		int mapSize = map->getMapSize().x*map->getTileSize();
 		int colX = map->getMapSize().x;
 		if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 			deltaVelocity.x = 0;
-			posPlayer.x = map->getTileSize() * (colX - 1) + hitboxOffset.x;
-			sprite->changeAnimation(STAND_RIGHT);
+			velocity.x = 0;
+			posPlayer.x = map->getTileSize()*(colX - 1) + hitboxOffset.x;
+			//sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
-	else {
+	/*else {
 		if (sprite->animation() == MOVE_LEFT)
 			sprite->changeAnimation(STAND_LEFT);
 		else if (sprite->animation() == MOVE_RIGHT)
 			sprite->changeAnimation(STAND_RIGHT);
-	}
+	}*/
 
 	if (velocity.y < 0) {
 		int colY;
 		if (map->collisionMoveUp(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, colY)) {
 			deltaVelocity.y = 0;
-			posPlayer.y = map->getTileSize() * (colY + 1) - hitboxOffset.y;;
+			velocity.y = 0;
+			posPlayer.y = map->getTileSize()*(colY + 1) - hitboxOffset.y;;
 		}
 	}
 	else if (velocity.y > 0) {
@@ -377,7 +445,8 @@ inline void Player::updatePosition(int deltaTime) {
 		if (map->collisionMoveDown(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, colY))
 		{
 			deltaVelocity.y = 0;
-			posPlayer.y = map->getTileSize() * (colY - 1) + hitboxOffset.y;
+			velocity.y = 0;
+			posPlayer.y = map->getTileSize()*(colY - 1) + hitboxOffset.y;
 		}
 		float cloudSpeed;
 		int colTile;
@@ -403,4 +472,43 @@ inline void Player::updatePosition(int deltaTime) {
 	}
 
 	setPosition(posPlayer + deltaVelocity);
+}
+
+void Player::updateAnimation() {
+	if (canDash) {
+		if (grounded) {
+			if (velocity.x < 0 && sprite->animation() != MOVE_LEFT)
+				sprite->changeAnimation(MOVE_LEFT);
+			else if (velocity.x > 0 && sprite->animation() != MOVE_RIGHT)
+				sprite->changeAnimation(MOVE_RIGHT);
+			else if (velocity.x == 0) {
+				if (Game::instance().getSpecialKey(GLUT_KEY_UP))
+					sprite->changeAnimation(facingDirection == LEFT ? LOOK_UP_LEFT : LOOK_UP_RIGHT);
+				else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN))
+					sprite->changeAnimation(facingDirection == LEFT ? LOOK_DOWN_LEFT : LOOK_DOWN_RIGHT);
+				else
+					sprite->changeAnimation(facingDirection == LEFT ? STAND_LEFT : STAND_RIGHT);
+			}
+		}
+		else
+			sprite->changeAnimation(facingDirection == LEFT ? JUMP_LEFT : JUMP_RIGHT);
+	}
+	else {
+		if (grounded) {
+			if (velocity.x < 0 && sprite->animation() != MOVE_LEFT_NO_DASH)
+				sprite->changeAnimation(MOVE_LEFT_NO_DASH);
+			else if (velocity.x > 0 && sprite->animation() != MOVE_RIGHT_NO_DASH)
+				sprite->changeAnimation(MOVE_RIGHT_NO_DASH);
+			else if (velocity.x == 0) {
+				if (Game::instance().getSpecialKey(GLUT_KEY_UP))
+					sprite->changeAnimation(facingDirection == LEFT ? LOOK_UP_LEFT_NO_DASH : LOOK_UP_RIGHT_NO_DASH);
+				else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN))
+					sprite->changeAnimation(facingDirection == LEFT ? LOOK_DOWN_LEFT_NO_DASH : LOOK_DOWN_RIGHT_NO_DASH);
+				else
+					sprite->changeAnimation(facingDirection == LEFT ? STAND_LEFT_NO_DASH : STAND_RIGHT_NO_DASH);
+			}
+		}
+		else
+			sprite->changeAnimation(facingDirection == LEFT ? JUMP_LEFT_NO_DASH : JUMP_RIGHT_NO_DASH);
+	}
 }

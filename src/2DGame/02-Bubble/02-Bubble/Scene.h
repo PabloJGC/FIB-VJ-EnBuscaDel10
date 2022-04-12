@@ -1,11 +1,13 @@
 #ifndef _SCENE_INCLUDE
 #define _SCENE_INCLUDE
 
-
+#include <list>
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
 #include "TileMap.h"
-#include "Player.h"
+#include "PlayerPablo.h"
+#include "DustParticle.h"
+#include "ExplosionParticle.h"
 
 
 // Scene contains all the entities of our game.
@@ -22,10 +24,14 @@ public:
 	void init(int level);
 	int update(int deltaTime);
 	void render();
+	void addParticle(Particle* particle);
+	void generateDustParticle(glm::ivec2 pos);
+	void generateExplosionParticle(glm::ivec2 pos);
 
 private:
 	int level;
 	void initShaders();
+	list<Particle*> particles;
 
 private:
 	TileMap *map;

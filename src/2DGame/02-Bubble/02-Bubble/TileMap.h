@@ -52,7 +52,7 @@ public:
 	bool collisionMoveDown(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, int& colTile) const;
 	void breakFragileTiles(const glm::ivec2& pos, const glm::ivec2& size);
-	void breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size, int& wall);
+	bool breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size, int& wall);
 	void pickUpKeys(const glm::ivec2& pos, const glm::ivec2& size);
 	void startleWingedFiles();
 	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;

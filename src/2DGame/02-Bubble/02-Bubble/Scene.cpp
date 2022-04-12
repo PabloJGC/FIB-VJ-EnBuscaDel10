@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include "Game.h"
 
-
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
@@ -32,59 +31,71 @@ void Scene::init(int level)
 	switch (level) {
 	case 1: {
 		file = "levels/level01.txt";
+		player = new Player();
 		break;
 	}
 	case 2: {
 		file = "levels/level02.txt";
+		player = new Player();
 		break;
 	}
 	case 3: {
 		file = "levels/level03.txt";
+		player = new Player();
 		break;
 	}
 	case 4: {
 		file = "levels/level04.txt";
+		player = new Player();
 		break;
 	}
 	case 5: {
 		file = "levels/level05.txt";
+		player = new Player();
 		break;
 	}
 	case 6: {
 		file = "levels/halfTime.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 7: {
 		file = "levels/level06.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 8: {
 		file = "levels/level07.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 9: {
 		file = "levels/level08.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 10: {
 		file = "levels/level09.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 11: {
 		file = "levels/level10.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 12: {
 		file = "levels/memorial.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	case 13: {
 		file = "levels/victory.txt";
+		player = new PlayerPablo();
 		break;
 	}
 	}
 	map = TileMap::createTileMap(file, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	glm::ivec2 playerInitPos = map->getPlayerInitPos();
 	player->setPosition(playerInitPos);
@@ -98,6 +109,16 @@ int Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	map->update(deltaTime);
 	map->updateEntities(deltaTime);
+	for (list<Particle*>::iterator it = particles.begin(); it != particles.end();) {
+		(*it)->update(deltaTime);
+		if ((*it)->exceededMaxLifeTime()) {
+			(*it)->free();
+			delete (*it);
+			it = particles.erase(it);
+		}
+		else
+			++it;
+	}
 	bool nextLevel = player->update(deltaTime);
 	return level + int(nextLevel);
 }
@@ -118,10 +139,35 @@ void Scene::render()
 	map->renderEntities();
 	map->render(TileMap::LEVEL_LAYER);
 	map->renderDynamic(TileMap::LEVEL_LAYER);
-
+	
 	// Player:
 	player->render();
 	// Layers rendered in front of the player:
+	for (list<Particle*>::iterator it = particles.begin(); it != particles.end(); ++it)
+		(*it)->render();
+}
+
+void Scene::addParticle(Particle* particle) {
+	particles.push_back(particle);
+	particle->init(texProgram);
+}
+
+void Scene::generateDustParticle(glm::ivec2 pos) {
+	DustParticle* dp = new DustParticle(pos);
+	addParticle(dp);
+}
+
+void Scene::generateExplosionParticle(glm::ivec2 pos) {
+	ExplosionParticle* ep0 = new ExplosionParticle(pos, 45, 0);
+	addParticle(ep0);
+	ExplosionParticle* ep1 = new ExplosionParticle(pos, 120, 1);
+	addParticle(ep1);
+	ExplosionParticle* ep2 = new ExplosionParticle(pos, 225, 2);
+	addParticle(ep2);
+	ExplosionParticle* ep3 = new ExplosionParticle(pos, 305, 3);
+	addParticle(ep3);
+	ExplosionParticle* ep4 = new ExplosionParticle(pos, 350, 4);
+	addParticle(ep4);
 }
 
 void Scene::initShaders()
