@@ -381,18 +381,21 @@ inline void Player::updatePosition(int deltaTime) {
 		}
 		float cloudSpeed;
 		int colTile;
-		if (map->isAboveCloud(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset, hitboxSize, cloudSpeed, colTile)) {
+		if (map->isAboveCloud(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset + glm::ivec2(0, hitboxSize.y), glm::ivec2(hitboxSize.x, 4), cloudSpeed, colTile)) {
 			aboveCloud = true;
 			canDash = true;
+			deltaVelocityX.x += cloudSpeed * deltaTime;
 			deltaVelocity.x += cloudSpeed * deltaTime;
 			deltaVelocity.y = 0;
 			int mapSize = map->getMapSize().x * map->getTileSize();
 			int colX = map->getMapSize().x;
 			if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x + hitboxSize.x > mapSize || map->collisionMoveRight(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
 				deltaVelocity.x = 0;
+				posPlayer.x = map->getTileSize() * (colX - 1) + hitboxOffset.x;
 			}
 			colX = -1;
 			if (glm::ivec2(posPlayer + deltaVelocityX).x + hitboxOffset.x < 0 || map->collisionMoveLeft(glm::ivec2(posPlayer + deltaVelocityX) + hitboxOffset, hitboxSize, colX)) {
+				posPlayer.x = map->getTileSize() * (colX + 1) - hitboxOffset.x;
 				deltaVelocity.x = 0;
 			}
 			posPlayer.y = map->getTileSize() * (colTile - 1) + hitboxOffset.y;
