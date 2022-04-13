@@ -31,6 +31,7 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 	canClimb = false;
 	aboveCloud = false;
 	dead = false;
+
 	dashDirection = glm::ivec2(0);
 	spritesheet.loadFromFile("images/textures.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(spriteSize, glm::vec2(8. / 128., 8. / 256), &spritesheet, &shaderProgram);
@@ -155,7 +156,7 @@ bool Player::update(int deltaTime)
 
 	updatePosition(deltaTime);
 
-	if (map->enteredDeathZone(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
+	if (map->enteredDeathZone(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize, Game::instance().getGodMode()))
 		die();
 	else {
 		map->breakFragileTiles(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize);
@@ -188,7 +189,7 @@ bool Player::update(int deltaTime)
 
 void Player::die() {
 	Game::instance().increaseDeathCount();
-	Game::instance().getScene()->generateExplosionParticle(posPlayer);
+	((GameScene*)(Game::instance().getScene()))->generateExplosionParticle(posPlayer);
 	dead = true;
 }
 
@@ -321,7 +322,7 @@ void Player::updateState(int deltaTime) {
 }
 
 void Player::generateDustParticle() {
-	Game::instance().getScene()->generateDustParticle(posPlayer);
+	((GameScene*)(Game::instance().getScene()))->generateDustParticle(posPlayer);;
 }
 
 bool Player::wallAt(FacingDirection direction, int offset) const {
@@ -365,7 +366,7 @@ void Player::dash() {
 	dashDirection = glm::normalize(dashDirection);
 
 	dashTimer = DASH_TIME;
-	canDash = false;
+	canDash = false || Game::instance().getInfiniteDashMode();
 	state = DASHING;
 }
 
