@@ -513,22 +513,26 @@ bool TileMap::breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size,
 	return ret;
 }
 
-bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const {
+bool TileMap::enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size, bool godMode) const {
 	if (pos.y > mapSize.y * tileSize)
 		return true;
-	int x0, x1, y0, y1;
 
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
-	y0 = pos.y / tileSize;
-	y1 = (pos.y + size.y - 1) / tileSize;
-	for (int x = x0; x <= x1; x++) {
-		for (int y = y0; y <= y1; y++) {
-			if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isDeathZone(pos, size)) {
-				return true;
+	if (!godMode) {
+		int x0, x1, y0, y1;
+
+		x0 = pos.x / tileSize;
+		x1 = (pos.x + size.x - 1) / tileSize;
+		y0 = pos.y / tileSize;
+		y1 = (pos.y + size.y - 1) / tileSize;
+		for (int x = x0; x <= x1; x++) {
+			for (int y = y0; y <= y1; y++) {
+				if (!tilesOutOfBounds(glm::ivec2(x, y)) && mapLayer0[y * mapSize.x + x]->isDeathZone(pos, size)) {
+					return true;
+				}
 			}
 		}
 	}
+
 	return false;
 }
 
