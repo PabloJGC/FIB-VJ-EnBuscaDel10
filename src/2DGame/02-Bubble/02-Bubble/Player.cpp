@@ -4,7 +4,7 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 5
+#define JUMP_ANGLE_STEP 0.3125f
 #define RUN_MAX_SPEED 0.25f
 #define FALL_SPEED 0.25f
 #define CLIMB_FALL_SPEED 0.05f
@@ -239,7 +239,7 @@ void Player::updateState(int deltaTime) {
 		break;
 	}
 	case JUMPING: {
-		jumpAngle += JUMP_ANGLE_STEP;
+		jumpAngle += JUMP_ANGLE_STEP * deltaTime;
 		if (Game::instance().getJumpKeyPressed()) {
 			if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
