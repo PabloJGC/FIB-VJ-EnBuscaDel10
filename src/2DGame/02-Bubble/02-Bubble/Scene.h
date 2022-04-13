@@ -8,6 +8,8 @@
 #include "PlayerPablo.h"
 #include "DustParticle.h"
 #include "ExplosionParticle.h"
+#include "Text.h"
+#include "Quad.h"
 
 
 // Scene contains all the entities of our game.
@@ -34,11 +36,15 @@ private:
 	list<Particle*> particles;
 
 private:
+	string levelName;
+	Text text;
+	Quad *levelTextBg, *resultsTextBg;
 	TileMap *map;
 	Player *player;
-	ShaderProgram texProgram;
+	ShaderProgram texProgram, simpleProgram;
 	float currentTime;
 	glm::mat4 projection;
+	bool doShowResults;
 
 };
 

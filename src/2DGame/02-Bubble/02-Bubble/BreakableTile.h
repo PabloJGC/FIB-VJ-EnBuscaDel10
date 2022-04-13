@@ -1,3 +1,6 @@
+#ifndef _BREAKABLE_TILE_INCLUDE
+#define _BREAKABLE_TILE_INCLUDE
+
 #include "Tile.h"
 
 class BreakableTile : public Tile {
@@ -20,3 +23,5 @@ class BreakableTile : public Tile {
 		Texture spritesheet;
 		glm::ivec2 spriteSize;
 };
+
+#endif _BREAKABLE_TILE_INCLUDE

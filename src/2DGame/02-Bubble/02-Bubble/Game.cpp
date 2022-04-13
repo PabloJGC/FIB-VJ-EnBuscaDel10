@@ -40,6 +40,10 @@ void Game::increaseScore() {
 	++score;
 }
 
+void Game::increaseDeathCount() {
+	++deathCount;
+}
+
 void Game::keyPressed(int key)
 {
 	if(key == 27) // Escape code

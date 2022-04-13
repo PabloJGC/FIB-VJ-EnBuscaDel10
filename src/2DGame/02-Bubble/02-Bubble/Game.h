@@ -36,6 +36,10 @@ public:
 	void render();
 	void setBackgroundColor(float red, float green, float blue);
 	void increaseScore();
+	void increaseDeathCount();
+
+	int getScore() { return score; }
+	int getDeathCount() { return deathCount; }
 	
 	// Input callback methods
 	void keyPressed(int key);
@@ -59,7 +63,7 @@ private:
 		PRESSED,
 		DOWN
 	};
-	int currentLevel, score = 0;
+	int currentLevel, score = 0, deathCount = 0;
 	bool bPlay;                       // Continue to play game?
 	Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 

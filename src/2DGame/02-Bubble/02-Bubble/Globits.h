@@ -1,3 +1,6 @@
+#ifndef _GLOBITS_INCLUDE
+#define _GLOBITS_INCLUDE
+
 #include <cmath>
 #include <glm/glm.hpp>
 #include "Sprite.h"
@@ -22,3 +25,4 @@ class Globits {
 		int initPos;
 };
 
+#endif _GLOBITS_INCLUDE

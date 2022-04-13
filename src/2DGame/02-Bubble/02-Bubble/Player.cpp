@@ -187,6 +187,7 @@ bool Player::update(int deltaTime)
 }
 
 void Player::die() {
+	Game::instance().increaseDeathCount();
 	Game::instance().getScene()->generateExplosionParticle(posPlayer);
 	dead = true;
 }
@@ -210,7 +211,7 @@ void Player::updateState(int deltaTime) {
 	
 	if (grounded && state != DASHING)
 		canDash = true;
-	canClimb = !grounded && velocity.y > 0;
+	canClimb = !grounded && !aboveCloud && velocity.y > 0;
 
 	switch (state) {
 	case NORMAL: {
@@ -251,7 +252,7 @@ void Player::updateState(int deltaTime) {
 				dash();
 			}
 			else if (jumpAngle >= 180 ||
-				(jumpAngle > 90 && grounded))
+				(jumpAngle > 90 && (grounded || aboveCloud)))
 				state = NORMAL;
 			else if (canClimb && ((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT, 1)) ||
 				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && wallAt(LEFT, 1)))) {
@@ -289,7 +290,7 @@ void Player::updateState(int deltaTime) {
 			if (canDash && Game::instance().getDashKeyPressed()) {
 				dash();
 			}
-			else if (grounded || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT, 1)) ||
+			else if (grounded || aboveCloud || !((Game::instance().getSpecialKey(GLUT_KEY_RIGHT) && wallAt(RIGHT, 1)) ||
 				(Game::instance().getSpecialKey(GLUT_KEY_LEFT) && wallAt(LEFT, 1)))) {
 				state = NORMAL;
 			}
@@ -450,7 +451,7 @@ inline void Player::updatePosition(int deltaTime) {
 		}
 		float cloudSpeed;
 		int colTile;
-		if (map->isAboveCloud(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset + glm::ivec2(0, hitboxSize.y), glm::ivec2(hitboxSize.x, 4), cloudSpeed, colTile)) {
+		if (map->isAboveCloud(glm::ivec2(posPlayer + deltaVelocity) + hitboxOffset + glm::ivec2(0, hitboxSize.y - 4), glm::ivec2(hitboxSize.x, 4), cloudSpeed, colTile)) {
 			aboveCloud = true;
 			canDash = true;
 			deltaVelocityX.x += cloudSpeed * deltaTime;
@@ -469,6 +470,8 @@ inline void Player::updatePosition(int deltaTime) {
 			}
 			posPlayer.y = map->getTileSize() * (colTile - 1) + hitboxOffset.y;
 		}
+		else
+			aboveCloud = false;
 	}
 
 	setPosition(posPlayer + deltaVelocity);
@@ -476,7 +479,7 @@ inline void Player::updatePosition(int deltaTime) {
 
 void Player::updateAnimation() {
 	if (canDash) {
-		if (grounded) {
+		if (grounded || aboveCloud) {
 			if (velocity.x < 0 && sprite->animation() != MOVE_LEFT)
 				sprite->changeAnimation(MOVE_LEFT);
 			else if (velocity.x > 0 && sprite->animation() != MOVE_RIGHT)
@@ -494,7 +497,7 @@ void Player::updateAnimation() {
 			sprite->changeAnimation(facingDirection == LEFT ? JUMP_LEFT : JUMP_RIGHT);
 	}
 	else {
-		if (grounded) {
+		if (grounded || aboveCloud) {
 			if (velocity.x < 0 && sprite->animation() != MOVE_LEFT_NO_DASH)
 				sprite->changeAnimation(MOVE_LEFT_NO_DASH);
 			else if (velocity.x > 0 && sprite->animation() != MOVE_RIGHT_NO_DASH)

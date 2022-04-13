@@ -1,3 +1,6 @@
+#ifndef _FRAGILE_TILE_INCLUDE
+#define _FRAGILE_TILE_INCLUDE
+
 #include "Tile.h"
 
 class FragileTile : public Tile {
@@ -23,3 +26,5 @@ private:
 	Texture spritesheet;
 	glm::ivec2 spriteSize;
 };
+
+#endif _FRAGILE_TILE_INCLUDE

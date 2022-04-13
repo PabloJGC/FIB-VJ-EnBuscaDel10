@@ -1,4 +1,5 @@
 #include "FragileTile.h"
+#include "Game.h"
 
 #define BREAKING_TIME 150
 #define REGENERATION_TIME 3000
@@ -52,6 +53,7 @@ void FragileTile::update(int deltaTime) {
 		case BROKEN: {
 			timer += deltaTime;
 			if (timer >= REGENERATION_TIME) {
+				Game::instance().getScene()->generateDustParticle(pos);
 				state = NORMAL;
 				transparent = false;
 				sprite->changeAnimation(NORMAL);

@@ -1,4 +1,5 @@
 #include "BreakableTile.h"
+#include "Game.h"
 
 BreakableTile::BreakableTile(int id, glm::ivec2 pos, int size) : Tile(id, pos, size) {
 	spriteSize = glm::ivec2(size, size);
@@ -27,6 +28,7 @@ void BreakableTile::render() const {
 
 void BreakableTile::setBroken() {
 	if (state == NORMAL) {
+		Game::instance().getScene()->generateDustParticle(pos);
 		transparent = true;
 		state = BROKEN;
 		sprite->changeAnimation(BROKEN);
