@@ -5,22 +5,26 @@
 
 void Game::init()
 {
-	setBackgroundColor(0.6f, 0.6f, 0.9f);
-	currentLevel = 1;
+	scene = new MenuScene();
+	currentLevel = 0;
 	bPlay = true;
-	scene.init(currentLevel);
+	scene->init(currentLevel);
 }
 
 bool Game::update(int deltaTime)
 {
-	int level = scene.update(deltaTime);
+	int level = scene->update(deltaTime);
 	for (int i = 0; i < 256; ++i) {
 		if (keyStatus[i] == PRESSED)
 			keyStatus[i] = DOWN;
 	}
 	if (level != currentLevel) {
+		if (currentLevel == 0) {
+			delete scene;
+			scene = new GameScene();
+		}
 		currentLevel = level;
-		scene.init(currentLevel);
+		scene->init(currentLevel);
 	}
 	
 	return bPlay;
@@ -29,7 +33,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	scene->render();
 }
 
 void Game::setBackgroundColor(float red, float green, float blue) {
@@ -50,7 +54,7 @@ void Game::keyPressed(int key)
 		bPlay = false;
 	else if (key >= 48 && key <= 57) {
 		currentLevel = key - 47;
-		scene.init(currentLevel);
+		scene->init(currentLevel);
 	}
 	keys[key] = true;
 	if (keyStatus[key] == UP)
@@ -104,5 +108,5 @@ bool Game::getSpecialKey(int key) const
 }
 
 Scene* Game::getScene() {
-	return &scene;
+	return scene;
 }

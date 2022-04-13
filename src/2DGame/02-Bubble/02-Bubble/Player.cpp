@@ -4,7 +4,7 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 5
+#define JUMP_ANGLE_STEP 0.3125f //5
 #define RUN_MAX_SPEED 0.25f
 #define FALL_SPEED 0.25f
 #define CLIMB_FALL_SPEED 0.05f
@@ -188,7 +188,7 @@ bool Player::update(int deltaTime)
 
 void Player::die() {
 	Game::instance().increaseDeathCount();
-	Game::instance().getScene()->generateExplosionParticle(posPlayer);
+	((GameScene*)(Game::instance().getScene()))->generateExplosionParticle(posPlayer);
 	dead = true;
 }
 
@@ -238,7 +238,7 @@ void Player::updateState(int deltaTime) {
 		break;
 	}
 	case JUMPING: {
-		jumpAngle += JUMP_ANGLE_STEP;
+		jumpAngle += JUMP_ANGLE_STEP*deltaTime;
 		if (Game::instance().getJumpKeyPressed()) {
 			if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
@@ -321,7 +321,7 @@ void Player::updateState(int deltaTime) {
 }
 
 void Player::generateDustParticle() {
-	Game::instance().getScene()->generateDustParticle(posPlayer);
+	((GameScene*)(Game::instance().getScene()))->generateDustParticle(posPlayer);;
 }
 
 bool Player::wallAt(FacingDirection direction, int offset) const {

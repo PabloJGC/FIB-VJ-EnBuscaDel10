@@ -2,7 +2,8 @@
 #define _GAME_INCLUDE
 
 
-#include "Scene.h"
+#include "GameScene.h"
+#include "MenuScene.h"
 
 
 #define SCREEN_WIDTH 512
@@ -65,7 +66,7 @@ private:
 	};
 	int currentLevel, score = 0, deathCount = 0;
 	bool bPlay;                       // Continue to play game?
-	Scene scene;                      // Scene to render
+	Scene* scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 	                                  // we can have access at any time
 	KeyStatus keyStatus[256];		  // Used to know when they've been pressed.

@@ -53,7 +53,7 @@ void FragileTile::update(int deltaTime) {
 		case BROKEN: {
 			timer += deltaTime;
 			if (timer >= REGENERATION_TIME) {
-				Game::instance().getScene()->generateDustParticle(pos);
+				((GameScene*)(Game::instance().getScene()))->generateDustParticle(pos);
 				state = NORMAL;
 				transparent = false;
 				sprite->changeAnimation(NORMAL);

@@ -4,12 +4,8 @@
 #include <list>
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-#include "TileMap.h"
-#include "PlayerPablo.h"
-#include "DustParticle.h"
-#include "ExplosionParticle.h"
 #include "Text.h"
-#include "Quad.h"
+#include "SnowParticle.h"
 
 
 // Scene contains all the entities of our game.
@@ -23,28 +19,22 @@ public:
 	Scene();
 	~Scene();
 
-	void init(int level);
-	int update(int deltaTime);
-	void render();
+	virtual void init(int level);
+	virtual int update(int deltaTime);
+	virtual void render() {};
+	void generateSnowParticle(int minY, int maxY, int time);
 	void addParticle(Particle* particle);
-	void generateDustParticle(glm::ivec2 pos);
-	void generateExplosionParticle(glm::ivec2 pos);
 
-private:
+protected:
 	int level;
 	void initShaders();
 	list<Particle*> particles;
 
-private:
-	string levelName;
+protected:
 	Text text;
-	Quad *levelTextBg, *resultsTextBg;
-	TileMap *map;
-	Player *player;
 	ShaderProgram texProgram, simpleProgram;
-	float currentTime;
+	float currentTime, snowTimer;
 	glm::mat4 projection;
-	bool doShowResults;
 
 };
 
