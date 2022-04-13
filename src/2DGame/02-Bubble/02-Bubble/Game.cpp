@@ -5,22 +5,44 @@
 
 void Game::init()
 {
+	scene = new GameScene();
 	setBackgroundColor(0.6f, 0.6f, 0.9f);
 	currentLevel = 1;
 	bPlay = true;
-	scene.init(currentLevel);
+
+	godMode = false;
+	slowMode = false;
+	infiniteDashMode = false;
+
+	scene->init(currentLevel);
+}
+
+void Game::updateMode() {
+	if (getGodModeKeyPressed()) {
+		godMode = !godMode;
+	}
+	if (getSlowModeKeyPressed()) {
+		slowMode = !slowMode;
+	}
+	if (getInfiniteDashModeKeyPressed()) {
+		infiniteDashMode = !infiniteDashMode;
+	}
 }
 
 bool Game::update(int deltaTime)
 {
-	int level = scene.update(deltaTime);
+	updateMode();
+
+	int newDeltaTime = deltaTime;
+	if (slowMode) newDeltaTime /= 2;
+	int level = scene->update(newDeltaTime);
 	for (int i = 0; i < 256; ++i) {
 		if (keyStatus[i] == PRESSED)
 			keyStatus[i] = DOWN;
 	}
 	if (level != currentLevel) {
 		currentLevel = level;
-		scene.init(currentLevel);
+		scene->init(currentLevel);
 	}
 	
 	return bPlay;
@@ -29,7 +51,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	scene->render();
 }
 
 void Game::setBackgroundColor(float red, float green, float blue) {
@@ -50,7 +72,7 @@ void Game::keyPressed(int key)
 		bPlay = false;
 	else if (key >= 48 && key <= 57) {
 		currentLevel = key - 47;
-		scene.init(currentLevel);
+		scene->init(currentLevel);
 	}
 	keys[key] = true;
 	if (keyStatus[key] == UP)
@@ -98,11 +120,35 @@ bool Game::getDashKeyPressed() {
 	return keyStatus[DASH_KEY_UC] == PRESSED || keyStatus[DASH_KEY_LC] == PRESSED;
 }
 
+bool Game::getGodModeKeyPressed() {
+	return keyStatus[GOD_MODE_KEY_UC] == PRESSED || keyStatus[GOD_MODE_KEY_LC] == PRESSED;
+}
+
+bool Game::getSlowModeKeyPressed() {
+	return keyStatus[SLOW_MODE_KEY_UC] == PRESSED || keyStatus[SLOW_MODE_KEY_LC] == PRESSED;
+}
+
+bool Game::getInfiniteDashModeKeyPressed() {
+	return keyStatus[INFINITE_DASH_MODE_KEY_UC] == PRESSED || keyStatus[INFINITE_DASH_MODE_KEY_LC] == PRESSED;
+}
+
+bool Game::getGodMode() {
+	return godMode;
+}
+
+bool Game::getSlowMode() {
+	return slowMode;
+}
+
+bool Game::getInfiniteDashMode() {
+	return infiniteDashMode;
+}
+
 bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
 }
 
 Scene* Game::getScene() {
-	return &scene;
+	return scene;
 }
