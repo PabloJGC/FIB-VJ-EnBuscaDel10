@@ -5,9 +5,8 @@
 
 void Game::init()
 {
-	scene = new GameScene();
-	setBackgroundColor(0.6f, 0.6f, 0.9f);
-	currentLevel = 1;
+	scene = new MenuScene();
+	currentLevel = 0;
 	bPlay = true;
 
 	godMode = false;
