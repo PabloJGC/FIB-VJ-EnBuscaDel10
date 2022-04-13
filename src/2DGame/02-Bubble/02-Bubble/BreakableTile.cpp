@@ -28,7 +28,7 @@ void BreakableTile::render() const {
 
 void BreakableTile::setBroken() {
 	if (state == NORMAL) {
-		Game::instance().getScene()->generateDustParticle(pos);
+		((GameScene*)(Game::instance().getScene()))->generateDustParticle(pos);
 		transparent = true;
 		state = BROKEN;
 		sprite->changeAnimation(BROKEN);

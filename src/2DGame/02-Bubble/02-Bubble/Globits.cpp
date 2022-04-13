@@ -37,7 +37,7 @@ bool Globits::collides(glm::vec2 playerPos, glm::vec2 playerSize) {
 		return false;
 	if (playerPos.x + playerSize.x >= pos.x && playerPos.x <= pos.x + colliderSize.x &&
 		playerPos.y + playerSize.y >= pos.y && playerPos.y <= pos.y + colliderSize.y) {
-		Game::instance().getScene()->generateDustParticle(pos);
+		((GameScene*)(Game::instance().getScene()))->generateDustParticle(pos);
 		timer = 0;
 		state = BLOWN_UP;
 		sprite->changeAnimation(BLOWN_UP);
@@ -54,7 +54,7 @@ void Globits::update(int deltaTime) {
 		sprite->update(deltaTime);
 	}
 	else if (timer >= REGENERATION_TIME) {
-		Game::instance().getScene()->generateDustParticle(pos);
+		((GameScene*)(Game::instance().getScene()))->generateDustParticle(pos);
 		state = NORMAL;
 		sprite->changeAnimation(NORMAL);
 	}

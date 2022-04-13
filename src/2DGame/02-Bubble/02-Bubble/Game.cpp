@@ -41,6 +41,10 @@ bool Game::update(int deltaTime)
 			keyStatus[i] = DOWN;
 	}
 	if (level != currentLevel) {
+		if (currentLevel == 0) {
+			delete scene;
+			scene = new GameScene();
+		}
 		currentLevel = level;
 		scene->init(currentLevel);
 	}

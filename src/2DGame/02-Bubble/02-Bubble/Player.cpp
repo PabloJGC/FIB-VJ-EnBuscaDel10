@@ -239,7 +239,7 @@ void Player::updateState(int deltaTime) {
 		break;
 	}
 	case JUMPING: {
-		jumpAngle += JUMP_ANGLE_STEP * deltaTime;
+		jumpAngle += JUMP_ANGLE_STEP*deltaTime;
 		if (Game::instance().getJumpKeyPressed()) {
 			if (wallAt(RIGHT, WALL_JUMP_DISTANCE)) {
 				wallJump(RIGHT);
