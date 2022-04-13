@@ -5,15 +5,37 @@
 
 void Game::init()
 {
-	scene = new MenuScene();
-	currentLevel = 0;
+	scene = new GameScene();
+	setBackgroundColor(0.6f, 0.6f, 0.9f);
+	currentLevel = 1;
 	bPlay = true;
+
+	godMode = false;
+	slowMode = false;
+	infiniteDashMode = false;
+
 	scene->init(currentLevel);
+}
+
+void Game::updateMode() {
+	if (getGodModeKeyPressed()) {
+		godMode = !godMode;
+	}
+	if (getSlowModeKeyPressed()) {
+		slowMode = !slowMode;
+	}
+	if (getInfiniteDashModeKeyPressed()) {
+		infiniteDashMode = !infiniteDashMode;
+	}
 }
 
 bool Game::update(int deltaTime)
 {
-	int level = scene->update(deltaTime);
+	updateMode();
+
+	int newDeltaTime = deltaTime;
+	if (slowMode) newDeltaTime /= 2;
+	int level = scene->update(newDeltaTime);
 	for (int i = 0; i < 256; ++i) {
 		if (keyStatus[i] == PRESSED)
 			keyStatus[i] = DOWN;
@@ -100,6 +122,30 @@ bool Game::getJumpKeyPressed() {
 
 bool Game::getDashKeyPressed() {
 	return keyStatus[DASH_KEY_UC] == PRESSED || keyStatus[DASH_KEY_LC] == PRESSED;
+}
+
+bool Game::getGodModeKeyPressed() {
+	return keyStatus[GOD_MODE_KEY_UC] == PRESSED || keyStatus[GOD_MODE_KEY_LC] == PRESSED;
+}
+
+bool Game::getSlowModeKeyPressed() {
+	return keyStatus[SLOW_MODE_KEY_UC] == PRESSED || keyStatus[SLOW_MODE_KEY_LC] == PRESSED;
+}
+
+bool Game::getInfiniteDashModeKeyPressed() {
+	return keyStatus[INFINITE_DASH_MODE_KEY_UC] == PRESSED || keyStatus[INFINITE_DASH_MODE_KEY_LC] == PRESSED;
+}
+
+bool Game::getGodMode() {
+	return godMode;
+}
+
+bool Game::getSlowMode() {
+	return slowMode;
+}
+
+bool Game::getInfiniteDashMode() {
+	return infiniteDashMode;
 }
 
 bool Game::getSpecialKey(int key) const

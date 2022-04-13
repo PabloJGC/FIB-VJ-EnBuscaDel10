@@ -55,7 +55,7 @@ public:
 	bool breakBreakableTiles(const glm::ivec2& pos, const glm::ivec2& size, int& wall);
 	void pickUpKeys(const glm::ivec2& pos, const glm::ivec2& size);
 	void startleWingedFiles();
-	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool enteredDeathZone(const glm::ivec2& pos, const glm::ivec2& size, bool godMode) const;
 	bool enteredSpring(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredFile(const glm::ivec2& pos, const glm::ivec2& size);

@@ -1,10 +1,16 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include <irrKlang.h>
+#include <iostream>
 
+using namespace std;
+using namespace irrklang;
 
 //Remove console (only works in Visual Studio)
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+
+#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
 
 
 #define TIME_PER_FRAME 1000.f / 60.f // Approx. 60 fps
@@ -79,6 +85,20 @@ static void idleCallback()
 	}
 }
 
+static void playMusic() {
+
+	// start the sound engine with default parameters
+	ISoundEngine* engine = createIrrKlangDevice();
+
+	if (!engine)
+		return; // error starting up the engine
+
+	// play some sound stream, looped, in 3D space
+	engine->play2D("music/celeste.mp3", true);
+
+	//engine->drop(); // delete engine
+
+}
 
 int main(int argc, char **argv)
 {
@@ -105,6 +125,10 @@ int main(int argc, char **argv)
 	// Game instance initialization
 	Game::instance().init();
 	prevTime = glutGet(GLUT_ELAPSED_TIME);
+
+	//Music
+	playMusic();
+
 	// GLUT gains control of the application
 	glutMainLoop();
 
