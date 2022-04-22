@@ -60,6 +60,7 @@ public:
 	bool enteredGlobits(const glm::ivec2& pos, const glm::ivec2& size);
 	bool enteredFile(const glm::ivec2& pos, const glm::ivec2& size);
 	bool isAboveCloud(const glm::ivec2& pos, const glm::ivec2& size, float& cloudSpeed, int& colTile);
+	void reset();
 
 private:
 	void prepareLayer(Tile** layer, GLuint& vao, GLuint& vbo, const glm::vec2& minCoords, ShaderProgram& program);

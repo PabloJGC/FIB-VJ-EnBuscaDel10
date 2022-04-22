@@ -1,0 +1,6 @@
+Pablo José Galván Calderón
+Aftab Ahmed Choudhry
+
+INSTRUCCIONS: C per saltar. X per dash.
+
+El joc permet utilitzar les funcionalitats JUMP, WALL JUMP, CLIMB i DASH, a més d'incloure tiles interactius (molles, tiles fràgils...) i objectes (globus, cofres...). A més, s'inclou un sistema de partícules.

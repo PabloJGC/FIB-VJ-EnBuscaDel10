@@ -10,6 +10,7 @@ public:
 	void startle();
 	void update(int deltaTime);
 	void render();
+	void regenerate();
 private:
 	enum WingedFileState {
 		NORMAL, STARTLED, TAKEN

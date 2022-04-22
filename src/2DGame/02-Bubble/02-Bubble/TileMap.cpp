@@ -590,6 +590,12 @@ void TileMap::startleWingedFiles() {
 	}
 }
 
+void TileMap::reset() {
+	for (int i = 0; i < wingedFileCount; ++i) {
+		wingedFiles[i]->regenerate();
+	}
+}
+
 bool TileMap::isAboveCloud(const glm::ivec2& pos, const glm::ivec2& size, float& cloudSpeed, int& colTile) {
 	for (int i = 0; i < cloudCountLeft; ++i) {
 		if (cloudsLeft[i]->collides(pos, size)) {

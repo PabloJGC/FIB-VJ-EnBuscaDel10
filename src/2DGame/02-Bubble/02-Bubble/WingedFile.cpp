@@ -83,3 +83,13 @@ void WingedFile::update(int deltaTime) {
 void WingedFile::render() {
 	sprite->render();
 }
+
+void WingedFile::regenerate() {
+	if (state != TAKEN) {
+		state = NORMAL;
+		sprite->changeAnimation(NORMAL);
+		pos.y = initPos;
+		sprite->setPosition((glm::ivec2(pos)/4)*4);
+		timer = 0;
+	}
+}

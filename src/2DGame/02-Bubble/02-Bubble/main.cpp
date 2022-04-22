@@ -94,7 +94,7 @@ static void playMusic() {
 		return; // error starting up the engine
 
 	// play some sound stream, looped, in 3D space
-	engine->play2D("music/celeste.mp3", true);
+	engine->play2D("music/golden.mp3", true);
 
 	//engine->drop(); // delete engine
 

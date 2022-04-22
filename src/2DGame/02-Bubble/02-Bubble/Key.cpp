@@ -1,4 +1,5 @@
 #include "Key.h"
+#include "Game.h"
 
 Key::Key(glm::ivec2 pos, Chest* chest) {
 	this->pos = pos;
@@ -34,6 +35,7 @@ void Key::init(ShaderProgram& shaderProgram) {
 void Key::pickUp(glm::vec2 playerPos, glm::vec2 playerSize) {
 	if (state == NORMAL && playerPos.x + playerSize.x >= pos.x && playerPos.x <= pos.x + colliderSize.x &&
 		playerPos.y + playerSize.y >= pos.y && playerPos.y <= pos.y + colliderSize.y) {
+		Game::instance().playSound("audio/score.wav");
 		chest->unlock();
 		state = TAKEN;
 		sprite->changeAnimation(TAKEN);

@@ -1,3 +1,5 @@
+#ifndef _CHEST_INCLUDE
+#define _CHEST_INCLUDE
 #include <glm/glm.hpp>
 #include "Sprite.h"
 
@@ -22,3 +24,4 @@ class Chest {
 		glm::ivec2 spriteSize, colliderSize;
 };
 
+#endif _CHEST_INCLUDE

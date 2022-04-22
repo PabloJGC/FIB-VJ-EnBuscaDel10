@@ -120,7 +120,6 @@ void Player::init(const glm::ivec2& tileMapPos, ShaderProgram& shaderProgram)
 
 bool Player::update(int deltaTime)
 {
-	// De momento die y respawn están separadas por si al final hacemos alguna animación de muerte.
 	if (dead) {
 		respawn();
 	}
@@ -176,10 +175,14 @@ bool Player::update(int deltaTime)
 			canDash = true;
 			jump(SPRING_MAX_SPEED);
 		}
-		if (map->enteredGlobits(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
+		if (map->enteredGlobits(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize)) {
+			Game::instance().playSound("audio/powerup.wav");
 			canDash = true;
-		if (map->enteredFile(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize))
+		}
+		if (map->enteredFile(glm::ivec2(posPlayer) + hitboxOffset, hitboxSize)) {
+			Game::instance().playSound("audio/score.wav");
 			Game::instance().increaseScore();
+		}
 	}
 
 	updateAnimation();
@@ -188,12 +191,14 @@ bool Player::update(int deltaTime)
 }
 
 void Player::die() {
+	Game::instance().playSound("audio/death.mp3");
 	Game::instance().increaseDeathCount();
 	((GameScene*)(Game::instance().getScene()))->generateExplosionParticle(posPlayer);
 	dead = true;
 }
 
 void Player::respawn() {
+	map->reset();
 	posPlayer = map->getPlayerInitPos();
 	canDash = true;
 	canClimb = false;
@@ -333,6 +338,7 @@ bool Player::wallAt(FacingDirection direction, int offset) const {
 }
 
 void Player::wallJump(FacingDirection facingDirection) {
+	Game::instance().playSound("audio/jump.wav");
 	generateDustParticle();
 	dashDirection.y = -1;
 	dashDirection.x = facingDirection == LEFT ? 1 : -1;
@@ -344,6 +350,7 @@ void Player::wallJump(FacingDirection facingDirection) {
 }
 
 void Player::jump(float speed) {
+	Game::instance().playSound("audio/jump.wav");
 	generateDustParticle();
 	state = JUMPING;
 	jumpAngle = 0;
@@ -351,6 +358,7 @@ void Player::jump(float speed) {
 }
 
 void Player::dash() {
+	Game::instance().playSound("audio/dash.wav");
 	generateDustParticle();
 	map->startleWingedFiles();
 	dashDirection.y = Game::instance().getSpecialKey(GLUT_KEY_UP) ? -1

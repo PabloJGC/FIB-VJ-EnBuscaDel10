@@ -2,9 +2,13 @@
 #include <GL/glut.h>
 #include "Game.h"
 
+#define MAX_LEVEL 13
+
 
 void Game::init()
 {
+	engine = createIrrKlangDevice();
+	engine->setSoundVolume(0.3f);
 	scene = new MenuScene();
 	currentLevel = 0;
 	bPlay = true;
@@ -44,8 +48,11 @@ bool Game::update(int deltaTime)
 			delete scene;
 			scene = new GameScene();
 		}
-		currentLevel = level;
-		scene->init(currentLevel);
+		
+		if (currentLevel < MAX_LEVEL) {
+			currentLevel = level;
+			scene->init(currentLevel);
+		}
 	}
 	
 	return bPlay;
@@ -67,6 +74,12 @@ void Game::increaseScore() {
 
 void Game::increaseDeathCount() {
 	++deathCount;
+}
+
+void Game::playSound(char* file) {
+	if (!engine)
+		return;
+	engine->play2D(file, false);
 }
 
 void Game::keyPressed(int key)

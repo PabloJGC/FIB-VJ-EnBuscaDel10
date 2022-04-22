@@ -22,6 +22,7 @@ public:
 	virtual void init(int level);
 	virtual int update(int deltaTime);
 	virtual void render() {};
+	void setCameraOffset(int x, int y);
 	void generateSnowParticle(int minY, int maxY, int time);
 	void addParticle(Particle* particle);
 

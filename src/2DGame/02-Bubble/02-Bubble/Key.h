@@ -1,3 +1,6 @@
+#ifndef _KEY_INCLUDE
+#define _KEY_INCLUDE
+
 #include <glm/glm.hpp>
 #include "Sprite.h"
 #include "Chest.h"
@@ -22,3 +25,5 @@ private:
 	Chest* chest;
 };
 
+
+#endif _KEY_INCLUDE

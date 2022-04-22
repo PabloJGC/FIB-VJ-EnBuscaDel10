@@ -48,6 +48,9 @@ int Scene::update(int deltaTime)
 	return level;
 }
 
+void Scene::setCameraOffset(int x, int y) {
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1 + x), float(SCREEN_HEIGHT - 1 + y), 0.f);
+}
 void Scene::generateSnowParticle(int minY, int maxY, int time) {
 	SnowParticle* dp = new SnowParticle(minY, maxY, time);
 	addParticle(dp);

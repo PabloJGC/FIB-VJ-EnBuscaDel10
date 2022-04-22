@@ -1,25 +1,36 @@
-﻿  Player.cpp
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(235,36): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+﻿  BreakableTile.cpp
+  FragileTile.cpp
+  Game.cpp
+  GameScene.cpp
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\GameScene.cpp(147,47): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\GameScene.cpp(201,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\GameScene.cpp(203,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Globits.cpp
+  Key.cpp
+  MenuScene.cpp
+  Player.cpp
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(247,41): warning C4244: '+=': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(344,36): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(244,50): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(364,50): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(248,51): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(368,51): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(252,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(372,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
           with
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(299,94): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(421,48): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
           with
           [
               T=int
@@ -28,7 +39,7 @@ C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(311,77): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(434,48): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
           with
           [
               T=int
@@ -37,18 +48,91 @@ C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(325,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(450,48): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(459,48): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(473,51): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(477,51): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(480,53): warning C4244: '=': conversión de 'T' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+  PlayerPablo.cpp
+  Scene.cpp
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Scene.cpp(36,46): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+  TileMap.cpp
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\TileMap.cpp(604,19): warning C4244: '=': conversión de 'T' a 'int'; posible pérdida de datos
           with
           [
               T=float
           ]
-C:\Users\pablo\source\repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\Player.cpp(332,37): warning C4244: '=': conversión de 'int' a 'T'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\TileMap.cpp(612,19): warning C4244: '=': conversión de 'T' a 'int'; posible pérdida de datos
           with
           [
               T=float
           ]
-SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
-  02-Bubble.vcxproj -> C:\Users\pablo\Source\Repos\PabloJGC\FIB-VJ-EnBuscaDel10\src\2DGame\02-Bubble\Debug\02-Bubble.exe
+  WingedFile.cpp
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\WingedFile.cpp(10,15): warning C4244: '=': conversión de 'T' a 'float'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+  main.cpp
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\main.cpp(81,31): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\main.cpp(83,29): warning C4244: '+=': conversión de 'float' a 'int'; posible pérdida de datos
+  Generando código...
+C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\02-Bubble\MenuScene.cpp(30): warning C4715: 'MenuScene::update': no todas las rutas de acceso de control devuelven un valor
+LINK : warning LNK4075: se omite '/INCREMENTAL' debido a la especificación '/OPT:ICF'
+BreakableTile.obj : warning LNK4075: se omite '/EDITANDCONTINUE' debido a la especificación '/OPT:ICF'
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(SOIL.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(SOIL.obj)' o en 'C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+  02-Bubble.vcxproj -> C:\Users\pablo\source\repos\EnBuscaDel10\src\2DGame\02-Bubble\Debug\02-Bubble.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\01.HelloWorld.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\02.3DSound.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\03.MemoryPlayback.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\04.OverrideFileAccess.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\05.Effects.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\06.Recording.exe
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\ikpFlac.dll
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\ikpMP3.dll
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\irrKlang.dll
+  ..\..\..\libs\irrKlang-1.6.0\bin\win32-visualStudio\irrKlangPlayer.exe
+  10 archivo(s) copiado(s)

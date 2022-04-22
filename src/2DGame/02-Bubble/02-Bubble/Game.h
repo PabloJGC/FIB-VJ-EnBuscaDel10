@@ -5,6 +5,12 @@
 #include "GameScene.h"
 #include "MenuScene.h"
 
+#include <irrKlang.h>
+
+#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
+
+using namespace irrklang;
+
 
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 512
@@ -44,6 +50,7 @@ public:
 	void setBackgroundColor(float red, float green, float blue);
 	void increaseScore();
 	void increaseDeathCount();
+	void playSound(char* file);
 
 	int getScore() { return score; }
 	int getDeathCount() { return deathCount; }
@@ -72,6 +79,7 @@ public:
 	Scene* getScene();
 
 private:
+	ISoundEngine* engine;
 	enum KeyStatus{
 		UP,
 		PRESSED,
